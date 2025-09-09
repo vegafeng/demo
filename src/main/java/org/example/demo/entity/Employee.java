@@ -1,4 +1,4 @@
-package org.example.day7employeecompanystarter.entity;
+package org.example.demo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
