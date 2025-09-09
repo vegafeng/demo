@@ -51,4 +51,13 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("oocl"));
     }
+
+    @Test
+    public void should_return_employees_when_get_given_id() throws Exception {
+        companyController.addCompany(company);
+        mockMvc.perform(get("/companies/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value(company.getName()));
+    }
 }

@@ -3,10 +3,7 @@ package org.example.demo.controller;
 import org.example.demo.entity.Company;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +21,10 @@ public class CompanyController {
     @GetMapping("/companies")
     public List<Company> getCompanies() {
         return companies;
+    }
+    @GetMapping("/companies/{id}")
+    public Company getCompany(@PathVariable int id) {
+        return  companies.stream().filter(company -> company.getId() == id).findFirst().orElse(null);
     }
 
 }
