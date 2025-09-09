@@ -1,6 +1,7 @@
 package org.example.demo.controller;
 
 import org.example.demo.entity.Employee;
+import org.example.demo.exception.EmployeeNotExsitingException;
 import org.example.demo.exception.PageNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class EmployeeController {
     @PutMapping("/employees/{id}")
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable long id) throws Exception {
         Employee employee1 = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
-        if (employee1 == null) throw new Exception();
+        if (employee1 == null) throw new EmployeeNotExsitingException();
         employee.setId(employee1.getId());
         return new ResponseEntity(employee, HttpStatus.NO_CONTENT);
 

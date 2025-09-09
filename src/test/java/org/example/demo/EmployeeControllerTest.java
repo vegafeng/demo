@@ -3,6 +3,7 @@ package org.example.demo;
 import org.example.demo.controller.EmployeeController;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.ExceptionMsg;
+import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,9 +140,26 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees?page=2&size=5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString(ExceptionMsg.Page_Not_Found)));
+                .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
 
     }
+    @Test
+    void should_throw_exception_when_get_given_employee_not_exsiting() throws Exception {
+        employeeController.addEmployee(employee);
+        String requestBody = """
+                {
+                    "name": "Tom",
+                    "salary": 1000,
+                    "age": 20,
+                    "gender": "male"
+                }
+                """;
+        mockMvc.perform(put("/employees/{id}", 2)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString(ExceptionMsg.EMPLOYEE_NOT_EXSITING)));
 
+    }
 
 }
