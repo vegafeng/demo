@@ -87,4 +87,11 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("oocl"));
     }
+    @Test
+    public void should_response_no_content_when_delete_given_employee_id() throws Exception {
+        companyController.addCompany(company);
+        mockMvc.perform(delete("/companies/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
 }

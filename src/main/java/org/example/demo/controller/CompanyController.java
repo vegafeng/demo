@@ -49,6 +49,12 @@ public class CompanyController {
         }
         throw new RuntimeException();
     }
+    @DeleteMapping("/companies/{id}")
+    public ResponseEntity deleteEmployee(@PathVariable long id) {
+        Company company = companies.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
+        companies.remove(company);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
 
 }
