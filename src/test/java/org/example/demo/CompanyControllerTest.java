@@ -2,6 +2,7 @@ package org.example.demo;
 
 import org.example.demo.controller.CompanyController;
 import org.example.demo.entity.Company;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,11 @@ public class CompanyControllerTest {
     private Company company2 = new Company("oocl");
     private Company company3 = new Company("sony");
     private Company company4 = new Company("sam");
+    @BeforeEach
+    public void setUp() throws Exception {
+        companyController.clearCompanies();
+    }
+
     @Test
     public void should_return_company_when_post_given_a_valid_company() throws Exception {
         String requestBody = """
@@ -45,10 +51,10 @@ public class CompanyControllerTest {
         mockMvc.perform(get("/companies")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("cosco"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("oocl"));
+                .andExpect(jsonPath("$[0].id").value(company.getId()))
+                .andExpect(jsonPath("$[0].name").value(company.getName()))
+                .andExpect(jsonPath("$[1].id").value(company2.getId()))
+                .andExpect(jsonPath("$[1].name").value(company2.getName()));
     }
 
     @Test
@@ -56,7 +62,7 @@ public class CompanyControllerTest {
         companyController.addCompany(company);
         mockMvc.perform(get("/companies/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(company.getId()))
                 .andExpect(jsonPath("$.name").value(company.getName()));
     }
     @Test
@@ -68,7 +74,7 @@ public class CompanyControllerTest {
         mockMvc.perform(get("/companies?page=1&size=5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].id").value(company.getId()))
                 .andExpect(jsonPath("$[0].name").value(company.getName()))
                 .andExpect(jsonPath("$.length()").value(4));
     }

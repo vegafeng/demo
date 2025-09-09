@@ -56,5 +56,9 @@ public class CompanyController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    public void clearCompanies() {
+        companies.clear();
+    }
+
 
 }
