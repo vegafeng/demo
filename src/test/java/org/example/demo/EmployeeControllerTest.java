@@ -99,6 +99,27 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$[0].salary").value(employee.getSalary()))
                 .andExpect(jsonPath("$.length()").value(4));
     }
+    @Test
+    public void should_return_matching_code_when_update_by_id_given_age_salary() throws Exception {
+        employeeController.addEmployee(employee);
+        String requestBody = """
+                {
+                    "name": "Tom",
+                    "salary": 1000,
+                    "age": 20,
+                    "gender": "male"
+                }
+                """;
+        mockMvc.perform(put("/employees/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value(employee.getName()))
+                .andExpect(jsonPath("$.gender").value(employee.getGender()))
+                .andExpect(jsonPath("$.salary").value(1000))
+                .andExpect(jsonPath("$.age").value(20));
+    }
 
 
 }

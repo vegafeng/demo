@@ -47,8 +47,16 @@ public class EmployeeController {
 
             }
         }
-
         return employeeList;
+    }
+    @PutMapping("/employees/{id}")
+    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable long id) {
+        Employee employee1 = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
+        if (employee1 != null) {
+            employee.setId(employee1.getId());
+            return new ResponseEntity(employee, HttpStatus.NO_CONTENT);
+        }
+        throw new RuntimeException();
     }
 
 }
