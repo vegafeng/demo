@@ -2,6 +2,7 @@ package org.example.demo.controller;
 
 import org.example.demo.entity.Company;
 import org.example.demo.entity.Employee;
+import org.example.demo.exception.CompanyNotExsitingException;
 import org.example.demo.exception.PageNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +43,11 @@ public class CompanyController {
         return companyList;
     }
     @PutMapping("/companies/{id}")
-    public ResponseEntity<Company> updateEmployee(@RequestBody Company company, @PathVariable long id) {
+    public ResponseEntity<Company> updateEmployee(@RequestBody Company company, @PathVariable long id) throws CompanyNotExsitingException {
         Company company1 = companies.stream().filter(company2 -> company2.getId() == id).findFirst().orElse(null);
-        if (company1 != null) {
-            company.setId(company1.getId());
-            return new ResponseEntity(company, HttpStatus.NO_CONTENT);
-        }
-        throw new RuntimeException();
+        if (company1 == null) throw new CompanyNotExsitingException();
+        company.setId(company1.getId());
+        return new ResponseEntity(company, HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("/companies/{id}")
     public ResponseEntity deleteEmployee(@PathVariable long id) {

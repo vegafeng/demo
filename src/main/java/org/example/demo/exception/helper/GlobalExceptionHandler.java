@@ -1,5 +1,6 @@
 package org.example.demo.exception.helper;
 
+import org.example.demo.exception.CompanyNotExsitingException;
 import org.example.demo.exception.EmployeeNotExsitingException;
 import org.example.demo.exception.ExceptionMsg;
 import org.example.demo.exception.PageNotFoundException;
@@ -18,5 +19,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmployeeNotExsitingException.class)
     public ResponseEntity<String> employeeNotExsiting() {
         return new ResponseEntity<>(ExceptionMsg.EMPLOYEE_NOT_EXSITING, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(CompanyNotExsitingException.class)
+    public ResponseEntity<String> companyNotExsiting() {
+        return new ResponseEntity<>(ExceptionMsg.COMPANY_NOT_EXSITING, HttpStatus.NOT_FOUND);
     }
 }

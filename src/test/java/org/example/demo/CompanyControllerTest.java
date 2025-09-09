@@ -113,4 +113,18 @@ public class CompanyControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
     }
+    @Test
+    public void should_throw_exception_when_get_given_company_not_exsiting() throws Exception {
+        companyController.addCompany(company);
+        String requestBody = """
+                {
+                    "name": "sony"
+                }
+                """;
+        mockMvc.perform(put("/companies/{id}", 2).
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isNotFound())
+                .andExpect(content().string(containsString(ExceptionMsg.COMPANY_NOT_EXSITING)));
+    }
 }
