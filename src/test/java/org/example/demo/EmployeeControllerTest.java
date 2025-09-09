@@ -52,6 +52,17 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
                 .andExpect(jsonPath("$[0].salary").value(employee.getSalary()));
     }
+    @Test
+    public void should_return_employees_when_get_given_id() throws Exception {
+        employeeController.addEmployee(employee);
+        mockMvc.perform(get("/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value(employee.getName()))
+                .andExpect(jsonPath("$.gender").value(employee.getGender()))
+                .andExpect(jsonPath("$.salary").value(employee.getSalary()));
+    }
+
 
 
 
