@@ -2,6 +2,7 @@ package org.example.demo;
 
 import org.example.demo.controller.CompanyController;
 import org.example.demo.entity.Company;
+import org.example.demo.exception.ExceptionMsg;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,7 +27,7 @@ public class CompanyControllerTest {
     private Company company3 = new Company("sony");
     private Company company4 = new Company("sam");
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         companyController.clearCompanies();
     }
 
@@ -99,5 +100,17 @@ public class CompanyControllerTest {
         mockMvc.perform(delete("/companies/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void should_throw_exception_when_get_given_page_out_of_all() throws Exception {
+        companyController.addCompany(company);
+        companyController.addCompany(company2);
+        companyController.addCompany(company3);
+        companyController.addCompany(company4);
+        mockMvc.perform(get("/companies?page=2&size=5")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString(ExceptionMsg.Page_Not_Found)));
     }
 }
