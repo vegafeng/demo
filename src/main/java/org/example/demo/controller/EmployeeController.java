@@ -1,6 +1,7 @@
 package org.example.demo.controller;
 
 import org.example.demo.entity.Employee;
+import org.example.demo.exception.PageNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,24 +40,24 @@ public class EmployeeController {
     @GetMapping(value = "/employees", params = {"page", "size"})
     public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int size) {
         List<Employee> employeeList=new ArrayList<>();
-        if (employees.size()>=(page-1)*size){
-            for (int i=(page-1)*size;i<page*size;i++) {
+        if (employees.size()<(page-1)*size) throw new PageNotFoundException();
+
+        for (int i=(page-1)*size;i<page*size;i++) {
                 if (i<employees.size()) {
                     employeeList.add(employees.get(i));
                 }
 
-            }
         }
+
         return employeeList;
     }
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable long id) {
+    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable long id) throws Exception {
         Employee employee1 = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
-        if (employee1 != null) {
-            employee.setId(employee1.getId());
-            return new ResponseEntity(employee, HttpStatus.NO_CONTENT);
-        }
-        throw new RuntimeException();
+        if (employee1 == null) throw new Exception();
+        employee.setId(employee1.getId());
+        return new ResponseEntity(employee, HttpStatus.NO_CONTENT);
+
     }
     public void clearEmployees() {
         employees.clear();

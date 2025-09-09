@@ -2,6 +2,7 @@ package org.example.demo;
 
 import org.example.demo.controller.EmployeeController;
 import org.example.demo.entity.Employee;
+import org.example.demo.exception.ExceptionMsg;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 
 @SpringBootTest
@@ -124,6 +127,20 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.gender").value(employee.getGender()))
                 .andExpect(jsonPath("$.salary").value(1000))
                 .andExpect(jsonPath("$.age").value(20));
+    }
+
+
+    @Test
+    void should_throw_exception_when_get_given_page_out_of_all() throws Exception {
+        employeeController.addEmployee(employee);
+        employeeController.addEmployee(employee2);
+        employeeController.addEmployee(employee3);
+        employeeController.addEmployee(employee4);
+        mockMvc.perform(get("/employees?page=2&size=5")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString(ExceptionMsg.Page_Not_Found)));
+
     }
 
 
