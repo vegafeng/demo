@@ -21,6 +21,9 @@ public class CompanyController {
         companies.add(company);
         return new ResponseEntity(company, HttpStatus.CREATED);
     }
-
+    @GetMapping("/companies")
+    public List<Company> getCompanies() {
+        return companies;
+    }
 
 }
