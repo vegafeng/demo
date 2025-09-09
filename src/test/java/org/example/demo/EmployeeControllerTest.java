@@ -2,6 +2,7 @@ package org.example.demo;
 
 import org.example.demo.controller.EmployeeController;
 import org.example.demo.entity.Employee;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +27,10 @@ public class EmployeeControllerTest {
     Employee employee2 = new Employee("Tom", 18, 10000, "female");
     Employee employee3 = new Employee("Mickey", 35, 60000, "male");
     Employee employee4 = new Employee("Donald", 28, 45000, "male");
+    @BeforeEach
+    public void setUp() {
+        employeeController.clearEmployees();
+    }
 
     @Test
     public void should_return_id_when_post_given_a_valid_employee() throws Exception {
@@ -71,7 +76,7 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].id").value(employee.getId()))
                 .andExpect(jsonPath("$[0].name").value(employee.getName()))
                 .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
                 .andExpect(jsonPath("$[0].salary").value(employee.getSalary()))

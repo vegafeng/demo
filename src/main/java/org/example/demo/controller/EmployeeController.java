@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 public class EmployeeController {
-    private List<Employee> employees = new ArrayList<Employee>();
+    private List<Employee> employees = new ArrayList<>();
 
     @GetMapping("/employees")
     public List<Employee> getEmployee() {
@@ -58,5 +58,7 @@ public class EmployeeController {
         }
         throw new RuntimeException();
     }
-
+    public void clearEmployees() {
+        employees.clear();
+    }
 }
