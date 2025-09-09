@@ -63,7 +63,21 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.salary").value(employee.getSalary()));
     }
 
-
+    @Test
+    public void should_return_employees_when_get_given_gender() throws Exception {
+        employeeController.addEmployee(employee);
+        employeeController.addEmployee(employee2);
+        System.out.println(employee.getGender());
+        System.out.println(employee2.getGender());
+        mockMvc.perform(get("/employees1?gender=male")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value(employee.getName()))
+                .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
+                .andExpect(jsonPath("$[0].salary").value(employee.getSalary()))
+                .andExpect(jsonPath("$.length()").value(1));
+    }
 
 
 }
