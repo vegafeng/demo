@@ -111,6 +111,6 @@ public class CompanyControllerTest {
         mockMvc.perform(get("/companies?page=2&size=5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString(ExceptionMsg.Page_Not_Found)));
+                .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
     }
 }
