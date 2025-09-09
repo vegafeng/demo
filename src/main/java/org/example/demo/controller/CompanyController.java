@@ -40,6 +40,15 @@ public class CompanyController {
         }
         return companyList;
     }
+    @PutMapping("/companies/{id}")
+    public ResponseEntity<Company> updateEmployee(@RequestBody Company company, @PathVariable long id) {
+        Company company1 = companies.stream().filter(company2 -> company2.getId() == id).findFirst().orElse(null);
+        if (company1 != null) {
+            company.setId(company1.getId());
+            return new ResponseEntity(company, HttpStatus.NO_CONTENT);
+        }
+        throw new RuntimeException();
+    }
 
 
 }
