@@ -41,6 +41,18 @@ public class EmployeeControllerTest {
                 andExpect(status().isCreated()).
                 andExpect(jsonPath("$.id").value(1));
     }
+    @Test
+    public void should_return_employees_when_get_all_given_null() throws Exception {
+        employeeController.addEmployee(employee);
+        mockMvc.perform(get("/employees").
+                        contentType(MediaType.APPLICATION_JSON)).
+                andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value(employee.getName()))
+                .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
+                .andExpect(jsonPath("$[0].salary").value(employee.getSalary()));
+    }
+
 
 
 }
