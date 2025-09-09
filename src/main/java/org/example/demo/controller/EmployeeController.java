@@ -26,7 +26,7 @@ public class EmployeeController {
     public Employee getEmployeeById(@PathVariable long id) {
         return employees.stream().filter(employee -> employee.getId() == id).findFirst().orElse(null);
     }
-    @GetMapping("/employees1")
+    @GetMapping(value = "/employees",params = {"gender"})
     public List<Employee> getEmployeeByGender(@RequestParam String gender) {
         return employees.stream().filter(employee -> employee.getGender().equals(gender)).toList();
     }
@@ -35,6 +35,20 @@ public class EmployeeController {
         Employee employee = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
         employees.remove(employee);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping(value = "/employees", params = {"page", "size"})
+    public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int size) {
+        List<Employee> employeeList=new ArrayList<>();
+        if (employees.size()>=(page-1)*size){
+            for (int i=(page-1)*size;i<page*size;i++) {
+                if (i<employees.size()) {
+                    employeeList.add(employees.get(i));
+                }
+
+            }
+        }
+
+        return employeeList;
     }
 
 }

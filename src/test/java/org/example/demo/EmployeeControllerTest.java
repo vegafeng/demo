@@ -24,6 +24,8 @@ public class EmployeeControllerTest {
 
     Employee employee = new Employee("Tom", 18, 10000, "male");
     Employee employee2 = new Employee("Tom", 18, 10000, "female");
+    Employee employee3 = new Employee("Mickey", 35, 60000, "male");
+    Employee employee4 = new Employee("Donald", 28, 45000, "male");
 
     @Test
     public void should_return_id_when_post_given_a_valid_employee() throws Exception {
@@ -66,7 +68,7 @@ public class EmployeeControllerTest {
     public void should_return_employees_when_get_given_gender() throws Exception {
         employeeController.addEmployee(employee);
         employeeController.addEmployee(employee2);
-        mockMvc.perform(get("/employees1?gender=male")
+        mockMvc.perform(get("/employees?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -81,6 +83,21 @@ public class EmployeeControllerTest {
         mockMvc.perform(delete("/employees/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+    @Test
+    public void should_return_employees_when_get_by_page_given_page_size() throws Exception {
+        employeeController.addEmployee(employee);
+        employeeController.addEmployee(employee2);
+        employeeController.addEmployee(employee3);
+        employeeController.addEmployee(employee4);
+        mockMvc.perform(get("/employees?page=1&size=5")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value(employee.getName()))
+                .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
+                .andExpect(jsonPath("$[0].salary").value(employee.getSalary()))
+                .andExpect(jsonPath("$.length()").value(4));
     }
 
 
