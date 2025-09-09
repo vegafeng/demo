@@ -30,5 +30,11 @@ public class EmployeeController {
     public List<Employee> getEmployeeByGender(@RequestParam String gender) {
         return employees.stream().filter(employee -> employee.getGender().equals(gender)).toList();
     }
+    @DeleteMapping("/employees/{id}")
+    public ResponseEntity deleteEmployee(@PathVariable long id) {
+        Employee employee = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
+        employees.remove(employee);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
 }

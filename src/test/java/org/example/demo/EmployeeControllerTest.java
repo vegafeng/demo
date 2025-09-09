@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,8 +66,6 @@ public class EmployeeControllerTest {
     public void should_return_employees_when_get_given_gender() throws Exception {
         employeeController.addEmployee(employee);
         employeeController.addEmployee(employee2);
-        System.out.println(employee.getGender());
-        System.out.println(employee2.getGender());
         mockMvc.perform(get("/employees1?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -77,6 +74,13 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
                 .andExpect(jsonPath("$[0].salary").value(employee.getSalary()))
                 .andExpect(jsonPath("$.length()").value(1));
+    }
+    @Test
+    public void should_response_no_content_when_delete_given_employee_id() throws Exception {
+        employeeController.addEmployee(employee);
+        mockMvc.perform(delete("/employees/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 
 
