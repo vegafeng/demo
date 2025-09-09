@@ -60,4 +60,17 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value(company.getName()));
     }
+    @Test
+    public void should_return_companies_when_get_by_page_given_page_size() throws Exception {
+        companyController.addCompany(company);
+        companyController.addCompany(company2);
+        companyController.addCompany(company3);
+        companyController.addCompany(company4);
+        mockMvc.perform(get("/companies?page=1&size=5")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value(company.getName()))
+                .andExpect(jsonPath("$.length()").value(4));
+    }
 }
