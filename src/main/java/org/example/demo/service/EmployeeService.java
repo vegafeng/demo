@@ -42,11 +42,10 @@ public class EmployeeService {
         return employeeRepository.findByPage(page, size);
     }
     public Employee updateEmployee(Employee employee, long id) {
-        Employee employee1 = employeeRepository.findById(id);
-        if (employee1 == null) throw new EmployeeNotExsitingException();
-        employee.setId(employee1.getId());
-        employeeRepository.update(employee);
-        return employee;
+        if (employeeRepository.update(employee, id)==null){
+            throw new EmployeeNotExsitingException();
+        }
+        return employeeRepository.update(employee, id);
     }
 
     public void clearEmployees() {

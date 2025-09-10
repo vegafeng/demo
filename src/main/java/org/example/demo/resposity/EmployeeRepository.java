@@ -2,6 +2,7 @@ package org.example.demo.resposity;
 
 import org.example.demo.entity.Company;
 import org.example.demo.entity.Employee;
+import org.example.demo.exception.EmployeeNotExsitingException;
 import org.example.demo.exception.PageNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -29,12 +30,17 @@ public class EmployeeRepository {
         employees.add(employee);
         return employee;
     }
-    public Employee update(Employee employee) {
-        int index = employees.indexOf(employee);
-        if (index != -1) {
-            employees.set(index, employee);
+    public Employee update(Employee employee, long id) {
+        System.out.println(employees.get(employees.size() - 1).getId());
+        if (id <=0 || id > employees.get(employees.size() - 1).getId()) {
+            return null;
         }
-        return employee;
+        Employee updatedEmployee = findById(id);
+        updatedEmployee.setName(employee.getName());
+        updatedEmployee.setSalary(employee.getSalary());
+        updatedEmployee.setGender(employee.getGender());
+        updatedEmployee.setAge(employee.getAge());
+        return updatedEmployee;
     }
     public Employee delete(long id) {
         int index = employees.indexOf(findById(id));

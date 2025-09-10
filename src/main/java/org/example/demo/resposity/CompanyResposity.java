@@ -1,6 +1,7 @@
 package org.example.demo.resposity;
 
 import org.example.demo.entity.Company;
+import org.example.demo.entity.Employee;
 import org.example.demo.exception.PageNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -29,12 +30,14 @@ public class CompanyResposity {
         companies.add(company);
         return company;
     }
-    public Company update(Company company) {
-        int index = companies.indexOf(company);
-        if (index != -1) {
-            companies.set(index, company);
+    public Company update(Company company, long id) {
+        if (id <=0 || id > companies.get(companies.size() - 1).getId()) {
+            return null;
         }
-        return company;
+        Company updateCompany = findById(id);
+        updateCompany.setName(company.getName());
+
+        return updateCompany;
     }
     public Company delete(long id) {
         int index = companies.indexOf(findById(id));

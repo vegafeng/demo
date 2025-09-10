@@ -38,11 +38,9 @@ public class CompanyService {
     }
 
     public Company updateCompany(Company company, long id) throws CompanyNotExsitingException {
-        Company existingCompany = companiesResposity.findById(id);
-        if (existingCompany == null) throw new CompanyNotExsitingException();
-        company.setId(existingCompany.getId());
-        companiesResposity.update(company);
-        return company;
+        if (companyResposity.update(company, id)==null) throw new CompanyNotExsitingException();
+
+        return companyResposity.update(company, id);
     }
 
     public void deleteCompany(long id) {
