@@ -71,7 +71,6 @@ public class EmployeeService {
     }
     public Employee updateEmployee(Employee employee, long id) {
 
-//        return employeeRepository.update(employee, id);
         if (!employeeRepositoryImpl.existsById(id)) throw new EmployeeNotExsitingException();
         Employee employee1 = employeeRepositoryImpl.findById(id).get();
         employee1.setName(employee.getName());
