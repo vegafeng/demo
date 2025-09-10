@@ -1,70 +1,53 @@
 package org.example.demo.controller;
 
 import org.example.demo.entity.Employee;
-import org.example.demo.exception.EmployeeNotExsitingException;
-import org.example.demo.exception.PageNotFoundException;
+import org.example.demo.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author FENGVE
  */
 @RestController
 public class EmployeeController {
-    private List<Employee> employees = new ArrayList<>();
-
+    @Autowired
+    private EmployeeService employeeService;
     @GetMapping("/employees")
     public List<Employee> getEmployee() {
-        return employees;
+        return employeeService.getEmployees();
     }
     @PostMapping("/employees")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-        if (employees.isEmpty()){
-            employee.setId(1);
-        }else {
-            employee.setId(employees.get(employees.size() - 1).getId()+1);
-        }
-        employees.add(employee);
+        employeeService.setEmployees(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
     @GetMapping("/employees/{id}")
     public Employee getEmployeeById(@PathVariable long id) {
-        return employees.stream().filter(employee -> employee.getId() == id).findFirst().orElse(null);
+        return employeeService.getEmployeeById(id);
     }
     @GetMapping(value = "/employees",params = {"gender"})
     public List<Employee> getEmployeeByGender(@RequestParam String gender) {
-        return employees.stream().filter(employee -> employee.getGender().equals(gender)).toList();
+        return employeeService.getEmployeeByGender(gender);
     }
     @DeleteMapping("/employees/{id}")
     public ResponseEntity deleteEmployee(@PathVariable long id) {
-        Employee employee = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
-        employees.remove(employee);
+        employeeService.deleteEmployee(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     @GetMapping(value = "/employees", params = {"page", "size"})
     public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int size) {
-        if (employees.size() < (page - 1) * size) {
-            throw new PageNotFoundException();
-        }
-        return employees.stream()
-                .skip((page - 1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
+        return employeeService.getEmployeeByPage(page, size);
     }
     @PutMapping("/employees/{id}")
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable long id) throws Exception {
-        Employee employee1 = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
-        if (employee1 == null) throw new EmployeeNotExsitingException();
-        employee.setId(employee1.getId());
-        return new ResponseEntity<>(employee, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(employeeService.updateEmployee(employee, id), HttpStatus.NO_CONTENT);
 
     }
     public void clearEmployees() {
-        employees.clear();
+        employeeService.clearEmployees();
     }
 }
