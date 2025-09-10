@@ -80,7 +80,35 @@ public class EmployeeControllerTest {
                 andExpect(jsonPath("$.name").value("Any"));
     }
 
-    
+    @Test
+    public void should_return_id_when_post_given_same_employee() throws Exception {
+        String requestBody = """
+                {
+                    "name": "coco",
+                    "salary": 1000,
+                    "gender": "male",
+                    "age": 20
+                }
+                """;
+        String requestBody2 = """
+                {
+                    "name": "coco",
+                    "salary": 2000,
+                    "gender": "male",
+                    "age": 30
+                }
+                """;
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isCreated()).
+                andExpect(jsonPath("$.name").value("coco"));
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody2)).
+                andExpect(status().isBadRequest());
+    }
+
 
     @Test
     public void should_throw_exception_when_post_given_an_invalid_employee_lt() throws Exception {
