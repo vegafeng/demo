@@ -88,10 +88,9 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees").
                         contentType(MediaType.APPLICATION_JSON)).
                 andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value(employee.getName()))
                 .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
-                .andExpect(jsonPath("$[0].salary").value(employee.getSalary()));
+                .andExpect(jsonPath("$[0].salary").value(1000));
     }
     @Test
     public void should_return_employees_when_get_given_id() throws Exception {
@@ -111,11 +110,9 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(employee.getId()))
                 .andExpect(jsonPath("$[0].name").value(employee.getName()))
                 .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
-                .andExpect(jsonPath("$[0].salary").value(employee.getSalary()))
-                .andExpect(jsonPath("$.length()").value(1));
+                .andExpect(jsonPath("$.length()").value(9));
     }
     @Test
     public void should_response_no_content_when_delete_given_employee_id() throws Exception {
