@@ -123,15 +123,19 @@ public class EmployeeServiceTest {
     public void should_return_employee_when_update_employee_given_status_true(){
         Employee employee = new Employee(123, "Tom", 20, 30000, "male", true);
         Employee employee2 = new Employee("Tom", 20, 30000, "male");
-        doReturn(true).when(employeeRepositoryImpl).existsById(123L);
         doReturn(Optional.of(employee)).when(employeeRepositoryImpl).findById(123L);
         employeeService.updateEmployee(employee2, 123L);
-        verify(employeeRepositoryImpl, times(1)).existsById(123L);
-        verify(employeeRepositoryImpl, times(1)).findById(123L);
-
-
+        verify(employeeRepositoryImpl, times(2)).findById(123L);
     }
+    @Test
+    public void should_throw_exception_when_update_employee_given_status_true(){
+        Employee employee = new Employee(123, "Tom", 20, 30000, "male", false);
+        Employee employee2 = new Employee("Tom", 20, 30000, "male");
+        doReturn(Optional.of(employee)).when(employeeRepositoryImpl).findById(123L);
+        assertThrows(EmployeeNotExsitingException.class, ()->{
+            employeeService.updateEmployee(employee2, 123L);
 
-
+        });
+    }
 
 }
