@@ -235,6 +235,21 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.salary").value(1000))
                 .andExpect(jsonPath("$.age").value(20));
     }
+    @Test
+    public void should_return_matching_code_when_update_given_status_false() throws Exception {
+        String requestBody = """
+                {
+                    "name": "kaka",
+                    "salary": 1000,
+                    "age": 20,
+                    "gender": "male"
+                }
+                """;
+        mockMvc.perform(put("/employees/{id}", 15)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound());
+    }
 
 
     @Test
