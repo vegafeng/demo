@@ -111,5 +111,14 @@ public class EmployeeServiceTest {
 
     }
 
+    @Test
+    public void should_return_employee_when_delete_employee_given_status_true(){
+        Employee employee = new Employee(123, "Tom", 20, 30000, "male", true);
+        doReturn(Optional.of(employee)).when(employeeRepositoryImpl).findById(123L);
+        employeeService.deleteEmployee(123);
+        verify(employeeRepositoryImpl, times(1)).delete(employee);
+
+    }
+
 
 }
