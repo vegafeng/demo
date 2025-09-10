@@ -1,6 +1,5 @@
-package org.example.demo;
+package org.example.demo.controller;
 
-import org.example.demo.controller.CompanyController;
 import org.example.demo.entity.Company;
 import org.example.demo.exception.ExceptionMsg;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,7 @@
-package org.example.demo;
+package org.example.demo.controller;
 
-import org.example.demo.controller.EmployeeController;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.ExceptionMsg;
-import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
