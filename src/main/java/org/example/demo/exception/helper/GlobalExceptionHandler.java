@@ -1,9 +1,6 @@
 package org.example.demo.exception.helper;
 
-import org.example.demo.exception.CompanyNotExsitingException;
-import org.example.demo.exception.EmployeeNotExsitingException;
-import org.example.demo.exception.ExceptionMsg;
-import org.example.demo.exception.PageNotFoundException;
+import org.example.demo.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,5 +23,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CompanyNotExsitingException.class)
     public ResponseEntity<String> companyNotExisting() {
         return new ResponseEntity<>(ExceptionMsg.COMPANY_NOT_EXSITING, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(AgeOutOfLegalRangeException.class)
+    public ResponseEntity<String> ageOutOfLegalRange() {
+        return new ResponseEntity<>(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE, HttpStatus.BAD_REQUEST);
     }
 }

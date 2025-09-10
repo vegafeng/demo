@@ -40,14 +40,47 @@ public class EmployeeControllerTest {
                 {
                     "name": "Tom",
                     "salary": 1000,
-                    "gender": "male"
+                    "gender": "male",
+                    "age": 20
                 }
                 """;
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
                 andExpect(status().isCreated()).
-                andExpect(jsonPath("$.id").value(1));
+                andExpect(jsonPath("$.name").value("Tom"));
+    }
+    @Test
+    public void should_throw_exception_when_post_given_an_invalid_employee_lt() throws Exception {
+        String requestBody = """
+                {
+                    "name": "Tom",
+                    "salary": 1000,
+                    "gender": "male",
+                    "age": 17
+                }
+                """;
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE)));
+    }
+    @Test
+    public void should_throw_exception_when_post_given_an_invalid_employee_gt() throws Exception {
+        String requestBody = """
+                {
+                    "name": "Tom",
+                    "salary": 1000,
+                    "gender": "male",
+                    "age": 70
+                }
+                """;
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE)));
     }
     @Test
     public void should_return_employees_when_get_all_given_null() throws Exception {
@@ -66,9 +99,9 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value(employee.getName()))
-                .andExpect(jsonPath("$.gender").value(employee.getGender()))
-                .andExpect(jsonPath("$.salary").value(employee.getSalary()));
+                .andExpect(jsonPath("$.name").value("Tom"))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.salary").value(1000));
     }
 
     @Test

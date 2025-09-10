@@ -1,55 +1,57 @@
 package org.example.demo.service;
 
 import org.example.demo.entity.Employee;
-import org.example.demo.exception.EmployeeNotExsitingException;
-import org.example.demo.exception.PageNotFoundException;
-import org.example.demo.resposity.EmployeeRepository;
+import org.example.demo.exception.AgeOutOfLegalRangeException;
+import org.example.demo.resposity.impl.EmployeeRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * @author FENGVE
  */
 @Service
 public class EmployeeService {
+//    @Autowired
+//    private EmployeeRepository employeeRepository;
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeRepositoryImpl employeeRepositoryImpl;
 
     public List<Employee> getEmployees() {
-        return employeeRepository.findAll();
+        return employeeRepositoryImpl.findAll();
     }
     public Employee setEmployees(Employee employee) {
-        employeeRepository.save(employee);
+        if (employee.getAge()<18 || employee.getAge()>65) {
+            throw new AgeOutOfLegalRangeException();
+        }
+        employeeRepositoryImpl.save(employee);
         return employee;
     }
-    public Employee getEmployeeById(long id) {
-        return employeeRepository.findById(id);
+    public Optional<Employee> getEmployeeById(long id) {
+        return employeeRepositoryImpl.findById(id);
     }
     public List<Employee> getEmployeeByGender(String gender) {
-        return employeeRepository.findByGender(gender);
+
+        return employeeRepositoryImpl.findAll().stream().filter(employee -> employee.getGender().equals(gender)).toList();
 
     }
     public void deleteEmployee(long id) {
-        employeeRepository.delete(id);
+        employeeRepositoryImpl.delete(employeeRepositoryImpl.findById(id).get());
     }
-    public List<Employee> getEmployeeByPage(int page, int size) {
-        return employeeRepository.findByPage(page, size);
-    }
-    public Employee updateEmployee(Employee employee, long id) {
-        if (employeeRepository.update(employee, id)==null){
-            throw new EmployeeNotExsitingException();
-        }
-        return employeeRepository.update(employee, id);
-    }
+//    public List<Employee> getEmployeeByPage(int page, int size) {
+//        return employeeRepository.findByPage(page, size);
+//    }
+//    public Employee updateEmployee(Employee employee, long id) {
+//        if (employeeRepository.update(employee, id)==null){
+//            throw new EmployeeNotExsitingException();
+//        }
+//        return employeeRepository.update(employee, id);
+//    }
 
     public void clearEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeRepositoryImpl.findAll();
             employees.clear();
     }
 
