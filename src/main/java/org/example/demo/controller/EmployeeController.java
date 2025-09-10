@@ -23,7 +23,7 @@ public class EmployeeController {
     }
     @PostMapping("/employees")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-        employee.setId(employees.get(employees.size() - 1).getId()+1);
+        employee.setId(employees.size()+1);
         employees.add(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
