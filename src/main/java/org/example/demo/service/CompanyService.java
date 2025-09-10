@@ -30,7 +30,7 @@ public class CompanyService {
         return companies;
     }
 
-    public Company getCompanyById(int id) {
+    public Company getCompanyById(long id) {
         return companies.stream().filter(company -> company.getId() == id).findFirst().orElse(null);
     }
 

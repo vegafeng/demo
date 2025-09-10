@@ -1,18 +1,14 @@
 package org.example.demo.controller;
 
 import org.example.demo.entity.Company;
-import org.example.demo.entity.Employee;
 import org.example.demo.exception.CompanyNotExsitingException;
-import org.example.demo.exception.PageNotFoundException;
 import org.example.demo.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author FENGVE
@@ -21,7 +17,6 @@ import java.util.stream.Collectors;
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
-//    private List<Company> companies = new ArrayList<>();
     public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
     }
@@ -35,7 +30,7 @@ public class CompanyController {
         return companyService.getCompanies();
     }
     @GetMapping("/companies/{id}")
-    public Company getCompany(@PathVariable int id) {
+    public Company getCompany(@PathVariable long id) {
         return companyService.getCompanyById(id);
     }
     @GetMapping(value = "/companies",params = {"page", "size"})
