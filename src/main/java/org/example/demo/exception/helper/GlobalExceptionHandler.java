@@ -32,4 +32,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> idNotExsiting() {
         return new ResponseEntity<>(ExceptionMsg.ID_NOT_EXSITING_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(InvalidSalaryException.class)
+    public ResponseEntity<String> invalidSalary() {
+        return new ResponseEntity<>(ExceptionMsg.INVALID_SALARY_EXCEPTION, HttpStatus.BAD_REQUEST);
+    }
 }

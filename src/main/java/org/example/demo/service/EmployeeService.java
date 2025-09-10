@@ -1,10 +1,7 @@
 package org.example.demo.service;
 
 import org.example.demo.entity.Employee;
-import org.example.demo.exception.AgeOutOfLegalRangeException;
-import org.example.demo.exception.EmployeeNotExsitingException;
-import org.example.demo.exception.IdNotExsitingException;
-import org.example.demo.exception.PageNotFoundException;
+import org.example.demo.exception.*;
 import org.example.demo.resposity.impl.EmployeeRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +27,17 @@ public class EmployeeService {
         if (employee.getAge()<18 || employee.getAge()>65) {
             throw new AgeOutOfLegalRangeException();
         }
+        if (employee.getAge()>=30 && employee.getSalary()<20000){
+            throw new InvalidSalaryException();
+        }
         employeeRepositoryImpl.save(employee);
         return employee;
     }
     public Optional<Employee> getEmployeeById(long id) {
-        return Optional.ofNullable(employeeRepositoryImpl.findById(id).orElseThrow(IdNotExsitingException::new));
+        if (employeeRepositoryImpl.findById(id)==null) {
+            throw new IdNotExsitingException();
+        }
+        return employeeRepositoryImpl.findById(id);
 //        if (employeeRepositoryImpl.findById(id).isPresent()) {
 //            return employeeRepositoryImpl.findById(id);
 //        }
