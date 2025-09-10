@@ -54,6 +54,9 @@ public class EmployeeService {
 
     }
     public void deleteEmployee(long id) {
+        if (!employeeRepositoryImpl.findById(id).get().getStatus()){
+            throw new EmployeeNotExsitingException();
+        }
         employeeRepositoryImpl.delete(employeeRepositoryImpl.findById(id).get());
     }
     public List<Employee> getEmployeeByPage(int page, int size) {

@@ -25,7 +25,7 @@ public class Employee {
     private int age;
     private int salary;
     private String gender;
-    private String status;
+    private boolean status;
 
     public Employee(String name, int age, int salary, String gender) {
         this.name = name;
@@ -45,5 +45,9 @@ public class Employee {
     @Override
     public int hashCode() {
         return Objects.hash(name, gender);
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 }

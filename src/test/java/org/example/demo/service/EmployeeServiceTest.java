@@ -101,7 +101,15 @@ public class EmployeeServiceTest {
             employeeService.setEmployees(employee2);
         });
     }
+    @Test
+    public void should_throw_exception_when_delete_employee_given_status_false(){
+        Employee employee = new Employee(123, "Tom", 20, 30000, "male", false);
+        doReturn(Optional.of(employee)).when(employeeRepositoryImpl).findById(123L);
+        assertThrows(EmployeeNotExsitingException.class, ()->{
+            employeeService.deleteEmployee(123);
+        });
 
+    }
 
 
 }
