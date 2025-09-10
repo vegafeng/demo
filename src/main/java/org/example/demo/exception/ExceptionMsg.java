@@ -7,4 +7,5 @@ public class ExceptionMsg {
     public static final String AGE_OUT_OF_LEGAL_RANGE = "Age Out of Legal Range";
     public static final String ID_NOT_EXSITING_EXCEPTION = "ID Not Exsiting Exception";
     public static final String INVALID_SALARY_EXCEPTION = "Invalid Salary Exception";
+    public static final String EMPLOYEE_ALREADY_EXISTS_EXCEPTION = "Employee Already Exists Exception";
 }

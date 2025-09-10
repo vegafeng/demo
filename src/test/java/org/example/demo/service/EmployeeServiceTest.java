@@ -1,18 +1,17 @@
 package org.example.demo.service;
 
+import org.assertj.core.util.Lists;
 import org.example.demo.entity.Employee;
-import org.example.demo.exception.AgeOutOfLegalRangeException;
-import org.example.demo.exception.IdNotExsitingException;
-import org.example.demo.exception.InvalidSalaryException;
-import org.example.demo.resposity.EmployeeRepository;
+import org.example.demo.exception.*;
 import org.example.demo.resposity.impl.EmployeeRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -79,6 +78,30 @@ public class EmployeeServiceTest {
         employeeService.setEmployees(employee);
         verify(employeeRepositoryImpl, times(1)).save(employee);
     }
+    @Test
+    public void should_return_employee_when_put_employee_given_different_name() {
+        Employee employee = new Employee("Tom", 20, 30000, "male");
+        Employee employee2 = new Employee("Jim", 20, 30000, "male");
+
+        employeeService.setEmployees(employee);
+        employeeService.setEmployees(employee2);
+        verify(employeeRepositoryImpl, times(2)).save(any(Employee.class));
+    }
+    @Test
+    public void should_throw_exception_when_put_employee_given_same_name_gender() {
+        Employee employee = new Employee("Tom", 20, 30000, "male");
+        Employee employee2 = new Employee("Tom", 20, 30000, "male");
+
+        employeeService.setEmployees(employee);
+
+        doReturn(Lists.newArrayList(employee)).when(employeeRepositoryImpl).findAll();
+
+        verify(employeeRepositoryImpl, times(1)).save(any(Employee.class));
+        assertThrows(EmployeeAlreadyExistsException.class, ()->{
+            employeeService.setEmployees(employee2);
+        });
+    }
+
 
 
 }

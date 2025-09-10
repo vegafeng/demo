@@ -30,6 +30,10 @@ public class EmployeeService {
         if (employee.getAge()>=30 && employee.getSalary()<20000){
             throw new InvalidSalaryException();
         }
+        if (employeeRepositoryImpl.findAll().stream()
+                .anyMatch(employee1 -> employee1.equals(employee))) {
+            throw new EmployeeAlreadyExistsException();
+        }
         employeeRepositoryImpl.save(employee);
         return employee;
     }

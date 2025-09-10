@@ -36,4 +36,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> invalidSalary() {
         return new ResponseEntity<>(ExceptionMsg.INVALID_SALARY_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(EmployeeAlreadyExistsException.class)
+    public ResponseEntity<String> employeeAlreadyExists() {
+        return new ResponseEntity<>(ExceptionMsg.EMPLOYEE_ALREADY_EXISTS_EXCEPTION, HttpStatus.BAD_REQUEST);
+
+    }
 }
