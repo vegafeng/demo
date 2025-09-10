@@ -83,6 +83,23 @@ public class EmployeeControllerTest {
                 .andExpect(content().string(containsString(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE)));
     }
     @Test
+    public void should_throw_exception_when_post_given_an_invalid_age_salary() throws Exception {
+        String requestBody = """
+                {
+                    "name": "Tom",
+                    "salary": 1000,
+                    "gender": "male",
+                    "age": 31
+                }
+                """;
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(ExceptionMsg.INVALID_SALARY_EXCEPTION)));
+    }
+
+    @Test
     public void should_return_employees_when_get_all_given_null() throws Exception {
         employeeController.addEmployee(employee);
         mockMvc.perform(get("/employees").
