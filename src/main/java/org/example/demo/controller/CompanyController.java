@@ -4,6 +4,8 @@ import org.example.demo.entity.Company;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.CompanyNotExsitingException;
 import org.example.demo.exception.PageNotFoundException;
+import org.example.demo.service.CompanyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,52 +19,41 @@ import java.util.stream.Collectors;
  */
 @RestController
 public class CompanyController {
-    private List<Company> companies = new ArrayList<>();
+    @Autowired
+    private CompanyService companyService;
+//    private List<Company> companies = new ArrayList<>();
+    public CompanyController(CompanyService companyService) {
+        this.companyService = companyService;
+    }
 
     @PostMapping("/companies")
     public ResponseEntity<Company> addCompany(@RequestBody Company company) {
-        if (companies.isEmpty()) {company.setId(1);}else {
-            company.setId(companies.get(companies.size() - 1).getId());
-
-        }
-        companies.add(company);
-        return new ResponseEntity<>(company, HttpStatus.CREATED);
+        return new ResponseEntity<>(companyService.addCompany(company), HttpStatus.CREATED);
     }
     @GetMapping("/companies")
     public List<Company> getCompanies() {
-        return companies;
+        return companyService.getCompanies();
     }
     @GetMapping("/companies/{id}")
     public Company getCompany(@PathVariable int id) {
-        return  companies.stream().filter(company -> company.getId() == id).findFirst().orElse(null);
+        return companyService.getCompanyById(id);
     }
     @GetMapping(value = "/companies",params = {"page", "size"})
     public List<Company> getCompany(@RequestParam int page, @RequestParam int size) {
-        if (companies.size() < (page - 1) * size) {
-            throw new PageNotFoundException();
-        }
-
-        return companies.stream()
-                .skip((page - 1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
+       return companyService.getCompaniesByPage(page, size);
     }
     @PutMapping("/companies/{id}")
     public ResponseEntity<Company> updateEmployee(@RequestBody Company company, @PathVariable long id) throws CompanyNotExsitingException {
-        Company company1 = companies.stream().filter(company2 -> company2.getId() == id).findFirst().orElse(null);
-        if (company1 == null) throw new CompanyNotExsitingException();
-        company.setId(company1.getId());
-        return new ResponseEntity<>(company, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(companyService.updateCompany(company, id), HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("/companies/{id}")
     public ResponseEntity deleteEmployee(@PathVariable long id) {
-        Company company = companies.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
-        companies.remove(company);
+        companyService.deleteCompany(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     public void clearCompanies() {
-        companies.clear();
+        companyService.clearCompanies();
     }
 
 
