@@ -2,60 +2,55 @@ package org.example.demo.service;
 
 import org.example.demo.entity.Company;
 import org.example.demo.exception.CompanyNotExsitingException;
-import org.example.demo.exception.PageNotFoundException;
+import org.example.demo.resposity.CompanyResposity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author FENGVE
  */
 @Service
 public class CompanyService {
-    private List<Company> companies = new ArrayList<>();
+    @Autowired
+    private CompanyResposity companiesResposity;
+    @Autowired
+    private CompanyResposity companyResposity;
 
     public Company addCompany(Company company) {
-        if (companies.isEmpty()) {
-            company.setId(1);
-        } else {
-            company.setId(companies.get(companies.size() - 1).getId() + 1);
-        }
-        companies.add(company);
+
+        companiesResposity.save(company);
         return company;
     }
 
     public List<Company> getCompanies() {
-        return companies;
+        return companiesResposity.findAll();
     }
 
     public Company getCompanyById(long id) {
-        return companies.stream().filter(company -> company.getId() == id).findFirst().orElse(null);
+        return companiesResposity.findById(id);
     }
 
     public List<Company> getCompaniesByPage(int page, int size) {
-        if (companies.size() < (page - 1) * size) {
-            throw new PageNotFoundException();
-        }
-        return companies.stream()
-                .skip((page - 1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
+        return companiesResposity.findByPage(page, size);
     }
 
     public Company updateCompany(Company company, long id) throws CompanyNotExsitingException {
-        Company existingCompany = getCompanyById((int) id);
+        Company existingCompany = companiesResposity.findById(id);
         if (existingCompany == null) throw new CompanyNotExsitingException();
         company.setId(existingCompany.getId());
+        companiesResposity.update(company);
         return company;
     }
 
     public void deleteCompany(long id) {
-        companies.removeIf(company -> company.getId() == id);
+        companiesResposity.delete(id);
     }
 
     public void clearCompanies() {
-        companies.clear();
+            List<Company> companies = companyResposity.findAll();
+            companies.clear();
     }
 }

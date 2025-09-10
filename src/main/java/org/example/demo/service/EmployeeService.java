@@ -3,6 +3,8 @@ package org.example.demo.service;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.EmployeeNotExsitingException;
 import org.example.demo.exception.PageNotFoundException;
+import org.example.demo.resposity.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,49 +18,40 @@ import java.util.stream.Collectors;
  */
 @Service
 public class EmployeeService {
-    private List<Employee> employees = new ArrayList<>();
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public List<Employee> getEmployees() {
-        return employees;
+        return employeeRepository.findAll();
     }
     public Employee setEmployees(Employee employee) {
-        if (employees.isEmpty()){
-            employee.setId(1);
-        }else {
-            employee.setId(employees.get(employees.size() - 1).getId()+1);
-        }
-        employees.add(employee);
+        employeeRepository.save(employee);
         return employee;
     }
     public Employee getEmployeeById(long id) {
-        return employees.stream().filter(employee -> employee.getId() == id).findFirst().orElse(null);
+        return employeeRepository.findById(id);
     }
     public List<Employee> getEmployeeByGender(String gender) {
-        return employees.stream().filter(employee -> employee.getGender().equals(gender)).toList();
+        return employeeRepository.findByGender(gender);
 
     }
     public void deleteEmployee(long id) {
-        Employee employee = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
-        employees.remove(employee);
+        employeeRepository.delete(id);
     }
     public List<Employee> getEmployeeByPage(int page, int size) {
-        if (employees.size() < (page - 1) * size) {
-            throw new PageNotFoundException();
-        }
-        return employees.stream()
-                .skip((page - 1) * size)
-                .limit(size)
-                .collect(Collectors.toList());
+        return employeeRepository.findByPage(page, size);
     }
     public Employee updateEmployee(Employee employee, long id) {
-        Employee employee1 = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
+        Employee employee1 = employeeRepository.findById(id);
         if (employee1 == null) throw new EmployeeNotExsitingException();
         employee.setId(employee1.getId());
+        employeeRepository.update(employee);
         return employee;
     }
 
     public void clearEmployees() {
-        employees.clear();
+        List<Employee> employees = employeeRepository.findAll();
+            employees.clear();
     }
 
 }
