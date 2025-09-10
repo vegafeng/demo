@@ -28,4 +28,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> ageOutOfLegalRange() {
         return new ResponseEntity<>(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(IdNotExsitingException.class)
+    public ResponseEntity<String> idNotExsiting() {
+        return new ResponseEntity<>(ExceptionMsg.ID_NOT_EXSITING_EXCEPTION, HttpStatus.BAD_REQUEST);
+    }
 }
