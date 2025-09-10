@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author FENGVE
@@ -20,7 +21,10 @@ public class CompanyController {
 
     @PostMapping("/companies")
     public ResponseEntity<Company> addCompany(@RequestBody Company company) {
-        company.setId(companies.size()+1);
+        if (companies.isEmpty()) {company.setId(1);}else {
+            company.setId(companies.get(companies.size() - 1).getId());
+
+        }
         companies.add(company);
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
@@ -34,16 +38,14 @@ public class CompanyController {
     }
     @GetMapping(value = "/companies",params = {"page", "size"})
     public List<Company> getCompany(@RequestParam int page, @RequestParam int size) {
-        List<Company> companyList=new ArrayList<>();
-        if (companies.size()<(page-1)*size) throw new PageNotFoundException();
-        for (int i=(page-1)*size;i<page*size;i++) {
-                if (i<companies.size()) {
-                    companyList.add(companies.get(i));
-                }
-
+        if (companies.size() < (page - 1) * size) {
+            throw new PageNotFoundException();
         }
 
-        return companyList;
+        return companies.stream()
+                .skip((page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
     }
     @PutMapping("/companies/{id}")
     public ResponseEntity<Company> updateEmployee(@RequestBody Company company, @PathVariable long id) throws CompanyNotExsitingException {

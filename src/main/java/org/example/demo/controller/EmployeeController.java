@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author FENGVE
@@ -23,7 +24,11 @@ public class EmployeeController {
     }
     @PostMapping("/employees")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-        employee.setId(employees.size()+1);
+        if (employees.isEmpty()){
+            employee.setId(1);
+        }else {
+            employee.setId(employees.get(employees.size() - 1).getId()+1);
+        }
         employees.add(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
@@ -43,17 +48,13 @@ public class EmployeeController {
     }
     @GetMapping(value = "/employees", params = {"page", "size"})
     public List<Employee> getEmployeesByPage(@RequestParam int page, @RequestParam int size) {
-        List<Employee> employeeList=new ArrayList<>();
-        if (employees.size()<(page-1)*size) throw new PageNotFoundException();
-
-        for (int i=(page-1)*size;i<page*size;i++) {
-                if (i<employees.size()) {
-                    employeeList.add(employees.get(i));
-                }
-
+        if (employees.size() < (page - 1) * size) {
+            throw new PageNotFoundException();
         }
-
-        return employeeList;
+        return employees.stream()
+                .skip((page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
     }
     @PutMapping("/employees/{id}")
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable long id) throws Exception {
