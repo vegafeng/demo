@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author FENGVE
+ */
 @RestController
 public class EmployeeController {
     private List<Employee> employees = new ArrayList<>();
@@ -20,7 +23,7 @@ public class EmployeeController {
     }
     @PostMapping("/employees")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-        employee.setId(employees.size()+1);
+        employee.setId(employees.get(employees.size() - 1).getId()+1);
         employees.add(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
@@ -57,7 +60,7 @@ public class EmployeeController {
         Employee employee1 = employees.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
         if (employee1 == null) throw new EmployeeNotExsitingException();
         employee.setId(employee1.getId());
-        return new ResponseEntity(employee, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(employee, HttpStatus.NO_CONTENT);
 
     }
     public void clearEmployees() {

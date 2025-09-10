@@ -114,7 +114,7 @@ public class CompanyControllerTest {
                 .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
     }
     @Test
-    public void should_throw_exception_when_get_given_company_not_exsiting() throws Exception {
+    public void should_throw_exception_when_get_given_company_not_existing() throws Exception {
         companyController.addCompany(company);
         String requestBody = """
                 {

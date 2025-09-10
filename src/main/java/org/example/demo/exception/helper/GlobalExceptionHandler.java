@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
+/**
+ * @author FENGVE
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(PageNotFoundException.class)
@@ -17,11 +20,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ExceptionMsg.PAGE_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(EmployeeNotExsitingException.class)
-    public ResponseEntity<String> employeeNotExsiting() {
+    public ResponseEntity<String> employeeNotExisting() {
         return new ResponseEntity<>(ExceptionMsg.EMPLOYEE_NOT_EXSITING, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(CompanyNotExsitingException.class)
-    public ResponseEntity<String> companyNotExsiting() {
+    public ResponseEntity<String> companyNotExisting() {
         return new ResponseEntity<>(ExceptionMsg.COMPANY_NOT_EXSITING, HttpStatus.NOT_FOUND);
     }
 }

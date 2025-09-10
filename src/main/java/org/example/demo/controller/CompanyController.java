@@ -11,15 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author FENGVE
+ */
 @RestController
 public class CompanyController {
-    private List<Company> companies = new ArrayList<Company>();
+    private List<Company> companies = new ArrayList<>();
 
     @PostMapping("/companies")
     public ResponseEntity<Company> addCompany(@RequestBody Company company) {
         company.setId(companies.size()+1);
         companies.add(company);
-        return new ResponseEntity(company, HttpStatus.CREATED);
+        return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
     @GetMapping("/companies")
     public List<Company> getCompanies() {
@@ -47,13 +50,13 @@ public class CompanyController {
         Company company1 = companies.stream().filter(company2 -> company2.getId() == id).findFirst().orElse(null);
         if (company1 == null) throw new CompanyNotExsitingException();
         company.setId(company1.getId());
-        return new ResponseEntity(company, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(company, HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("/companies/{id}")
     public ResponseEntity deleteEmployee(@PathVariable long id) {
         Company company = companies.stream().filter(employee2 -> employee2.getId() == id).findFirst().orElse(null);
         companies.remove(company);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     public void clearCompanies() {
