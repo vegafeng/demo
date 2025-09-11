@@ -73,9 +73,6 @@ public class EmployeeService {
         employeeExisting.setName(employee.getName());
         employeeExisting.setGender(employee.getGender());
         employeeExisting.setAge(employee.getAge());
-//        employee.setName(employee.getName());
-//        employee.setAge(employee.getAge());
-//        employee.setGender(employee.getGender());
         employeeRepository.saveEmployee(employeeExisting);
         return employeeExisting;
 

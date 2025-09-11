@@ -286,13 +286,13 @@ public class EmployeeControllerTest {
                 {
                     "name": "kaka",
                     "age": 20,
-                    "gender": "male",
+                    "gender": "male"
                 }
                 """;
         mockMvc.perform(put("/employees/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
 
@@ -309,13 +309,14 @@ public class EmployeeControllerTest {
 
         String requestBody = """
                 {
-                    "name": "Tom",
+                    "name": "lala",
                     "salary": 1000,
-                    "age": 20,
                     "gender": "male",
-                    "status": false
+                    "age": 20,
+                    "status": false,
+                    "companyId": %d
                 }
-                """;
+                """.formatted(company.getId());
 
         long id = createEmployee(requestBody);
         mockMvc.perform(get("/employees/{id}", id))
