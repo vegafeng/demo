@@ -80,11 +80,10 @@ public class CompanyControllerTest {
 
     @Test
     public void should_return_employees_when_get_given_id() throws Exception {
-        companyController.addCompany(company);
-        mockMvc.perform(get("/companies/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+        long id = createCompany(requestBody);
+        mockMvc.perform(get("/companies/{id}", id).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(company.getId()))
-                .andExpect(jsonPath("$.name").value(company.getName()));
+                .andExpect(jsonPath("$.name").value("oocl"));
     }
     @Test
     public void should_return_companies_when_get_by_page_given_page_size() throws Exception {
