@@ -1,6 +1,6 @@
 package org.example.demo.exception;
 
-public class PageNotFoundException extends RuntimeException {
+public class PageNotFoundException extends NotFoundException {
     public PageNotFoundException() {
         super(ExceptionMsg.PAGE_NOT_FOUND);
     }
