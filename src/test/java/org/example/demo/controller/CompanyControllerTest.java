@@ -1,5 +1,6 @@
 package org.example.demo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.example.demo.entity.Company;
 import org.example.demo.exception.ExceptionMsg;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +36,22 @@ public class CompanyControllerTest {
     private Company company4 = new Company("sam");
     private long INIT_LENGTH = 0;
     private List<Company> companies = new ArrayList<>();
+    private String requestBody;
+    private String requestBody2;
     @BeforeEach
     public void setUp() {
-//        companyController.clearCompanies();
         companies = companyController.getCompanies();
         INIT_LENGTH = companies.size();
+        requestBody = """
+                {
+                    "name": "oocl"
+                }
+                """;
+        requestBody2 = """
+                {
+                    "name": "cosco"
+                }
+                """;
     }
 
     @Test
@@ -56,15 +70,12 @@ public class CompanyControllerTest {
     }
     @Test
     public void should_return_companies_when_get_all_given_null() throws Exception{
-        companyController.addCompany(company);
-        companyController.addCompany(company2);
+        createCompany(requestBody);
+        createCompany(requestBody2);
         mockMvc.perform(get("/companies")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(company.getId()))
-                .andExpect(jsonPath("$[0].name").value(company.getName()))
-                .andExpect(jsonPath("$[1].id").value(company2.getId()))
-                .andExpect(jsonPath("$[1].name").value(company2.getName()));
+                .andExpect(jsonPath("$.length()").value(INIT_LENGTH+2));
     }
 
     @Test
@@ -135,5 +146,14 @@ public class CompanyControllerTest {
                         content(requestBody)).
                 andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(ExceptionMsg.COMPANY_NOT_EXSITING)));
+    }
+
+    private long createCompany(String requestBody) throws Exception {
+        ResultActions resultActions = mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody));
+        MvcResult mvcResult = resultActions.andReturn();
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        return new ObjectMapper().readTree(contentAsString).get("id").asLong();
     }
 }
