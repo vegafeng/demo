@@ -48,7 +48,6 @@ public class CompanyService {
     }
 
     public void clearCompanies() {
-            List<Company> companies = companyRepository.findAll();
-            companies.clear();
+            companyRepository.deleteAll();
     }
 }

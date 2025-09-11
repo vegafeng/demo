@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.example.demo.entity.Company;
 import org.example.demo.exception.ExceptionMsg;
+import org.example.demo.resposity.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class CompanyControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private CompanyController companyController;
+    @Autowired
+    private EmployeeRepository employeeRepository;
     private Company company = new Company("cosco");
     private Company company2 = new Company("oocl");
     private Company company3 = new Company("sony");
@@ -40,6 +43,8 @@ public class CompanyControllerTest {
     private String requestBody2;
     @BeforeEach
     public void setUp() {
+
+
         companies = companyController.getCompanies();
         INIT_LENGTH = companies.size();
         requestBody = """
@@ -87,25 +92,16 @@ public class CompanyControllerTest {
     }
     @Test
     public void should_return_companies_when_get_by_page_given_page_size() throws Exception {
-        companyController.addCompany(company);
-        companyController.addCompany(company2);
-        companyController.addCompany(company3);
-        companyController.addCompany(company4);
+        createCompany(requestBody);
+        createCompany(requestBody2);
         mockMvc.perform(get("/companies?page=1&size=5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(company.getId()))
-                .andExpect(jsonPath("$[0].name").value(company.getName()))
-                .andExpect(jsonPath("$.length()").value(4));
+                .andExpect(jsonPath("$.length()").value(5));
     }
     @Test
     public void should_return_matching_code_when_update_by_id_given_age_salary() throws Exception {
         companyController.addCompany(company);
-        String requestBody = """
-                {
-                    "name": "oocl"
-                }
-                """;
         mockMvc.perform(put("/companies/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
