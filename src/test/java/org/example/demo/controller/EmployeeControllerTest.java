@@ -49,14 +49,7 @@ public class EmployeeControllerTest {
     private String requestBody;
     private String requestBody2;
     private Company company;
-
-
-
-
     Employee employee = new Employee("Tombb", 18, 10000, "male");
-    Employee employee2 = new Employee("Tomuu", 18, 10000, "female");
-    Employee employee3 = new Employee("Mickeyqq", 35, 60000, "male");
-    Employee employee4 = new Employee("Donaldss", 28, 45000, "male");
     private List<Employee> employees = new ArrayList<>();
     private long INIT_LENGTH = 0;
     @BeforeEach

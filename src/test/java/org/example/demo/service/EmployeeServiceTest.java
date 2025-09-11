@@ -1,13 +1,18 @@
 package org.example.demo.service;
 
 import org.assertj.core.util.Lists;
+import org.example.demo.dto.UpdateEmployeeReq;
+import org.example.demo.entity.Company;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.*;
+import org.example.demo.resposity.CompanyRepository;
 import org.example.demo.resposity.EmployeeRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -21,6 +26,11 @@ public class EmployeeServiceTest {
     private EmployeeRepository employeeRepository;
     @InjectMocks
     private EmployeeService employeeService;
+
+    @BeforeEach
+    public void setUp() {
+
+    }
 
 
     @Test
@@ -41,9 +51,9 @@ public class EmployeeServiceTest {
     }
     @Test
     public void should_return_employee_when_get_employee_given_id() {
-        Employee employee = new Employee("Tom", 70, 10000, "male");
+        Employee employee = new Employee("Tom", 70, 10000, "male", true);
         doReturn(employee).when(employeeRepository).findEmployeeById(1L);
-        employeeService.getEmployeeById(1);
+        employeeService.getEmployeeById(1L);
         verify(employeeRepository, times(2)).findEmployeeById(1L);
     }
     @Test
@@ -114,25 +124,24 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(123, "Tom", 20, 30000, "male", true);
         doReturn(employee).when(employeeRepository).findEmployeeById(123L);
         employeeService.deleteEmployee(123);
-//        verify(employeeRepository, times(1)).delete(employee);
         verify(employeeRepository, times(2)).findEmployeeById(anyLong());
 
     }
     @Test
     public void should_return_employee_when_update_employee_given_status_true(){
         Employee employee = new Employee(123, "Tom", 20, 30000, "male", true);
-        Employee employee2 = new Employee("Tom", 20, 30000, "male");
+        UpdateEmployeeReq employee2 = new UpdateEmployeeReq("Jim", "female", 22);
         doReturn(employee).when(employeeRepository).findEmployeeById(123L);
-//        employeeService.updateEmployee(employee2, 123L);
+        employeeService.updateEmployee(employee2, 123L);
         verify(employeeRepository, times(2)).findEmployeeById(123L);
     }
     @Test
-    public void should_throw_exception_when_update_employee_given_status_true(){
+    public void should_throw_exception_when_update_employee_given_status_false(){
         Employee employee = new Employee(123, "Tom", 20, 30000, "male", false);
-        Employee employee2 = new Employee("Tom", 20, 30000, "male");
+        UpdateEmployeeReq employee2 = new UpdateEmployeeReq("Jim", "female", 22);
         doReturn(employee).when(employeeRepository).findEmployeeById(123L);
         assertThrows(EmployeeNotExsitingException.class, ()->{
-//            employeeService.updateEmployee(employee2, 123L);
+            employeeService.updateEmployee(employee2, 123L);
         });
     }
 

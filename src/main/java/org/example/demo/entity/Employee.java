@@ -45,6 +45,13 @@ public class Employee {
         this.gender = gender;
         this.status = status;
     }
+    public Employee(String name, int age, int salary, String gender, boolean status) {
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.gender = gender;
+        this.status = status;
+    }
 
     @Override
     public boolean equals(Object o) {
