@@ -2,12 +2,11 @@ package org.example.demo.service;
 
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.*;
-import org.example.demo.resposity.impl.EmployeeRepositoryImpl;
+import org.example.demo.resposity.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -18,49 +17,46 @@ public class EmployeeService {
 //    @Autowired
 //    private EmployeeRepository employeeRepository;
     @Autowired
-    private EmployeeRepositoryImpl employeeRepositoryImpl;
+    private EmployeeRepository employeeRepository;
 
     public List<Employee> getEmployees() {
-        return employeeRepositoryImpl.findAll();
+        return employeeRepository.findAllEmployees();
     }
-    public Employee setEmployees(Employee employee) {
+    public Employee save(Employee employee) {
         if (employee.getAge()<18 || employee.getAge()>65) {
             throw new AgeOutOfLegalRangeException();
         }
         if (employee.getAge()>=30 && employee.getSalary()<20000){
             throw new InvalidSalaryException();
         }
-        if (employeeRepositoryImpl.findAll().stream()
+        if (employeeRepository.findAllEmployees().stream()
                 .anyMatch(employee1 -> employee1.equals(employee))) {
             throw new EmployeeAlreadyExistsException();
         }
-        employeeRepositoryImpl.save(employee);
+        employeeRepository.saveEmployee(employee);
         return employee;
     }
-    public Optional<Employee> getEmployeeById(long id) {
-        if (employeeRepositoryImpl.findById(id)==null) {
+    public Employee getEmployeeById(long id) {
+        if (!employeeRepository.findEmployeeById(id).getStatus()) {
             throw new IdNotExsitingException();
         }
-        return employeeRepositoryImpl.findById(id);
-//        if (employeeRepositoryImpl.findById(id).isPresent()) {
-//            return employeeRepositoryImpl.findById(id);
-//        }
-//        throw new IdNotExsitingException();
+        return employeeRepository.findEmployeeById(id);
 
     }
     public List<Employee> getEmployeeByGender(String gender) {
 
-        return employeeRepositoryImpl.findAll().stream().filter(employee -> employee.getGender().equals(gender)).toList();
+        return employeeRepository.findAllEmployees().stream().filter(employee -> employee.getGender().equals(gender)).toList();
 
     }
     public void deleteEmployee(long id) {
-        if (!employeeRepositoryImpl.findById(id).get().getStatus()){
+        if (!employeeRepository.findEmployeeById(id).getStatus()){
             throw new EmployeeNotExsitingException();
         }
-        employeeRepositoryImpl.delete(employeeRepositoryImpl.findById(id).get());
+        employeeRepository.findEmployeeById(id).setStatus(false);
     }
+
     public List<Employee> getEmployeeByPage(int page, int size) {
-        List<Employee> employees = employeeRepositoryImpl.findAll();
+        List<Employee> employees = employeeRepository.findAllEmployees();
         if (employees.size()<(page-1)*size) {
             throw new PageNotFoundException();
         }
@@ -71,17 +67,22 @@ public class EmployeeService {
     }
     public Employee updateEmployee(Employee employee, long id) {
 
-        if (!employeeRepositoryImpl.findById(id).get().getStatus()) throw new EmployeeNotExsitingException();
-        Employee employee1 = employeeRepositoryImpl.findById(id).get();
-        employee1.setName(employee.getName());
-        employee1.setAge(employee.getAge());
-        employee1.setGender(employee.getGender());
-        return employeeRepositoryImpl.save(employee1);
+        if (!employeeRepository.findEmployeeById(id).getStatus()) throw new EmployeeNotExsitingException();
+        employee.setName(employee.getName());
+        employee.setAge(employee.getAge());
+        employee.setGender(employee.getGender());
+        return employeeRepository.saveEmployee(employee);
 
     }
 
+//
+//    public void deleteEmployeesInRange(Long initId, Long finalId) {
+//        List<Employee> employeesToDelete = employeeRepository.findAllByIdBetween(initId, finalId);
+//        employeeRepository.deleteAll(employeesToDelete);
+//    }
+
     public void clearEmployees() {
-        employeeRepositoryImpl.findAll().clear();
+        employeeRepository.findAllEmployees().clear();
     }
 
 }
