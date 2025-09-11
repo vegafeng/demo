@@ -2,6 +2,7 @@ package org.example.demo.service;
 
 import org.example.demo.entity.Company;
 import org.example.demo.exception.CompanyNotExsitingException;
+import org.example.demo.exception.PageNotFoundException;
 import org.example.demo.resposity.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,6 @@ import java.util.List;
 public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
-//    @Autowired
-//    private CompanyRepositoryImpl companyRepositoryImpl;
 
     public Company addCompany(Company company) {
 
@@ -33,11 +32,15 @@ public class CompanyService {
     }
 
     public List<Company> getCompaniesByPage(int page, int size) {
-        return companyRepository.findByPage(page, size);
+        List<Company> byPage = companyRepository.findByPage(page, size);
+        if (byPage.isEmpty()) {
+            throw new PageNotFoundException();
+        }
+        return byPage;
     }
 
     public Company updateCompany(Company company, long id) throws CompanyNotExsitingException {
-        if (companyRepository.update(company, id)==null) throw new CompanyNotExsitingException();
+        if (companyRepository.findById(id)==null) throw new CompanyNotExsitingException();
 
         return companyRepository.update(company, id);
     }

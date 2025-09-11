@@ -313,7 +313,7 @@ public class EmployeeControllerTest {
 
         long id = createEmployee(requestBody);
         mockMvc.perform(get("/employees/{id}", id))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(ExceptionMsg.ID_NOT_EXSITING_EXCEPTION)));
 
     }

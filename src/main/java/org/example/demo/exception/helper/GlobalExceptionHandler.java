@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 /**
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(IdNotExsitingException.class)
     public ResponseEntity<String> idNotExsiting() {
-        return new ResponseEntity<>(ExceptionMsg.ID_NOT_EXSITING_EXCEPTION, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ExceptionMsg.ID_NOT_EXSITING_EXCEPTION, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(InvalidSalaryException.class)
     public ResponseEntity<String> invalidSalary() {
@@ -41,4 +42,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ExceptionMsg.EMPLOYEE_ALREADY_EXISTS_EXCEPTION, HttpStatus.BAD_REQUEST);
 
     }
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String badRequest(BadRequestException ex) {
+        return ex.getMessage();
+    }
+
 }

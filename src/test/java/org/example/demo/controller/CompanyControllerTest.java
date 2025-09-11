@@ -123,25 +123,25 @@ public class CompanyControllerTest {
 
     @Test
     void should_throw_exception_when_get_given_page_out_of_all() throws Exception {
-        companyController.addCompany(company);
-        companyController.addCompany(company2);
-        companyController.addCompany(company3);
-        companyController.addCompany(company4);
-        mockMvc.perform(get("/companies?page=2&size=5")
+        companyController.clearCompanies();
+        createCompany(requestBody);
+        createCompany(requestBody2);
+        mockMvc.perform(get("/companies?page=10&size=5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
     }
 
     @Test
-    public void should_throw_exception_when_get_given_company_not_exsiting() throws Exception {
+    public void should_throw_exception_when_get_given_company_not_existing() throws Exception {
+        companyController.clearCompanies();
         companyController.addCompany(company);
         String requestBody = """
                 {
                     "name": "sony"
                 }
                 """;
-        mockMvc.perform(put("/companies/{id}", 2).
+        mockMvc.perform(put("/companies/{id}", 10000000).
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
                 andExpect(status().isNotFound())
