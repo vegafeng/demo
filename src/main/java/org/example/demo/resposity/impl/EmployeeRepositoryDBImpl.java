@@ -28,11 +28,9 @@ public class EmployeeRepositoryDBImpl implements EmployeeRepository {
 
     @Override
     public Employee saveEmployee(Employee employee) {
-//        return employeeJpaRepository.save(employee);
         return employeeJpaRepository.save(employee);
 
     }
-
 
     @Override
     public void deleteEmployeeById(Employee employee, long id) {
@@ -47,7 +45,6 @@ public class EmployeeRepositoryDBImpl implements EmployeeRepository {
 
     @Override
     public List<Employee> findEmployeesByPage(int page, int size) {
-//        return List.of();
         Page<Employee> employeePage = employeeJpaRepository.findAll(PageRequest.of(page, size));
         return employeePage.getContent();
     }

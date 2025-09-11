@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@Transactional
+@Transactional
 public class EmployeeControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -56,26 +56,21 @@ public class EmployeeControllerTest {
         System.out.println(INIT_LENGTH);
 
     }
-    @AfterEach
-    public void tearDown() throws Exception {
-//        employeeController.clearEmployees(INIT_TABLE_ID+1);
-
-
-
-    }
 
     @Test
     public void should_return_id_when_post_given_a_valid_employee() throws Exception {
-
-
+        Company company = new Company("cosco");
+        companyRepository.save(company);
         String requestBody = """
                 {
                     "name": "5",
                     "salary": 1000,
                     "gender": "male",
-                    "age": 20
+                    "age": 20,
+                    "status": true,
+                    "companyId": %d
                 }
-                """;
+                """.formatted(company.getId());
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
