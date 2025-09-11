@@ -129,9 +129,11 @@ public class EmployeeControllerTest {
                     "name": "Tomll",
                     "salary": 1000,
                     "gender": "male",
-                    "age": 17
+                    "age": 17,
+                    "status": true,
+                    "companyId": %d
                 }
-                """;
+                """.formatted(employee.getId());
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
