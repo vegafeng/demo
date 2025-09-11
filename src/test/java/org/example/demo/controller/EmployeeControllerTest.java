@@ -48,6 +48,7 @@ public class EmployeeControllerTest {
 
     private String requestBody;
     private String requestBody2;
+    private Company company;
 
 
 
@@ -62,7 +63,7 @@ public class EmployeeControllerTest {
     public void setUp() {
         employees = employeeController.getEmployee();
         INIT_LENGTH = employees.size();
-        Company company = new Company("cosco");
+        company = new Company("cosco");
         companyRepository.save(company);
         requestBody = """
                 {
@@ -242,8 +243,6 @@ public class EmployeeControllerTest {
 
     @Test
     public void should_return_matching_code_when_update_by_id_given_age_salary() throws Exception {
-        Company company = new Company("cosco");
-        companyRepository.save(company);
         Employee employee = new Employee();
         employee.setName("Tombb");
         employee.setGender("male");
@@ -272,21 +271,28 @@ public class EmployeeControllerTest {
     }
     @Test
     public void should_return_matching_code_when_update_given_status_false() throws Exception {
-        ResponseEntity<Employee> employeeResponseEntity = employeeController.addEmployee(employee);
-        long id = employeeResponseEntity.getBody().getId();
+
+        Employee employee = new Employee();
+        employee.setName("Tombb");
+        employee.setGender("male");
+        employee.setSalary(1000);
+        employee.setAge(18);
+        employee.setStatus(false);
+        employee.setCompanyId(company.getId());
+        employeeRepository.saveEmployee(employee);
+        long id = employee.getId();
+
         String requestBody = """
                 {
                     "name": "kaka",
-                    "salary": 1000,
                     "age": 20,
                     "gender": "male",
-                    "status": false
                 }
                 """;
         mockMvc.perform(put("/employees/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
 
