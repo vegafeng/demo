@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Objects;
 
@@ -26,12 +27,23 @@ public class Employee {
     private int salary;
     private String gender;
     private boolean status;
+    @Column(name = "company_id")
+    private long companyId;
 
     public Employee(String name, int age, int salary, String gender) {
         this.name = name;
         this.age = age;
         this.salary = salary;
         this.gender = gender;
+    }
+
+    public Employee(long id, String name, int age, int salary, String gender, boolean status) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.gender = gender;
+        this.status = status;
     }
 
     @Override
