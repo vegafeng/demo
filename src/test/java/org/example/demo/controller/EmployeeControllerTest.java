@@ -41,6 +41,10 @@ public class EmployeeControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private EmployeeController employeeController;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     private String requestBody;
     private String requestBody2;
@@ -225,29 +229,21 @@ public class EmployeeControllerTest {
 
     @Test
     public void should_return_employees_when_get_by_page_given_page_size() throws Exception {
-        employeeController.addEmployee(employee);
-        employeeController.addEmployee(employee2);
-        employeeController.addEmployee(employee3);
-        employeeController.addEmployee(employee4);
-        long id = createEmployee(EmployeeUtils.convertEmployeeToJson(employee));
+        createEmployee(requestBody);
+        createEmployee(requestBody2);
+        long index = INIT_LENGTH + 1;
         mockMvc.perform(get("/employees?page=1&size=5")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$." + id + ".name").value(employee.getName()))
-                .andExpect(jsonPath("$." + id + ".name").value(employee.getGender()))
-                .andExpect(jsonPath("$." + id + ".name").value(employee.getSalary()))
-                .andExpect(jsonPath("$.length()").value(4));
+                .andExpect(jsonPath("$.[" + index + "].name").value("kaka"))
+                .andExpect(jsonPath("$.[" + index + "].gender").value("female"))
+                .andExpect(jsonPath("$.[" + index + "].salary").value(200000));
     }
-    @Autowired
-    private CompanyRepository companyRepository;
-@Autowired
-private EmployeeRepository employeeRepository;
+
     @Test
     public void should_return_matching_code_when_update_by_id_given_age_salary() throws Exception {
-
         Company company = new Company("cosco");
         companyRepository.save(company);
-//        Employee employee = new Employee("Tombb", 18, 10000, "male");
         Employee employee = new Employee();
         employee.setName("Tombb");
         employee.setGender("male");
