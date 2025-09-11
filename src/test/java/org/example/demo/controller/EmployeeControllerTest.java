@@ -81,32 +81,38 @@ public class EmployeeControllerTest {
     }
     @Test
     public void should_return_id_when_post_given_different_employee() throws Exception {
+        Company company = new Company("cosco");
+        companyRepository.save(company);
         String requestBody = """
                 {
-                    "name": "yy",
+                    "name": "lala",
                     "salary": 1000,
                     "gender": "male",
-                    "age": 20
+                    "age": 20,
+                    "status": true,
+                    "companyId": %d
                 }
-                """;
+                """.formatted(company.getId());
         String requestBody2 = """
                 {
-                    "name": "mm",
-                    "salary": 1000,
-                    "gender": "male",
-                    "age": 20
+                    "name": "kaka",
+                    "salary": 200000,
+                    "gender": "female",
+                    "age": 30,
+                    "status": true,
+                    "companyId": %d
                 }
-                """;
+                """.formatted(company.getId());
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
                 andExpect(status().isCreated()).
-                andExpect(jsonPath("$.name").value("yy"));
+                andExpect(jsonPath("$.name").value("lala"));
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody2)).
                 andExpect(status().isCreated()).
-                andExpect(jsonPath("$.name").value("mm"));
+                andExpect(jsonPath("$.name").value("kaka"));
         assertEquals(employeeController.getEmployee().size(), INIT_LENGTH+2);
     }
 
