@@ -22,6 +22,7 @@ public class Company {
     private long id;
     private String name;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
     private List<Employee> employees;
     public Company(String name) {
         this.name = name;
