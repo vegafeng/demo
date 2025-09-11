@@ -1,7 +1,6 @@
-package org.example.demo.resposity;
+package org.example.demo.resposity.impl;
 
 import org.example.demo.entity.Company;
-import org.example.demo.entity.Employee;
 import org.example.demo.exception.PageNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 
 
 @Repository
-public class CompanyResposity {
+public class CompanyRepositoryImpl {
     private List<Company> companies = new ArrayList<>();
 
     public List<Company> findAll() {

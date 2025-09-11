@@ -2,11 +2,11 @@ package org.example.demo.service;
 
 import org.example.demo.entity.Company;
 import org.example.demo.exception.CompanyNotExsitingException;
-import org.example.demo.resposity.CompanyResposity;
+import org.example.demo.resposity.CompanyRepository;
+import org.example.demo.resposity.impl.CompanyRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,40 +15,40 @@ import java.util.List;
 @Service
 public class CompanyService {
     @Autowired
-    private CompanyResposity companiesResposity;
-    @Autowired
-    private CompanyResposity companyResposity;
+    private CompanyRepository companyRepository;
+//    @Autowired
+//    private CompanyRepositoryImpl companyRepositoryImpl;
 
     public Company addCompany(Company company) {
 
-        companiesResposity.save(company);
+        companyRepository.save(company);
         return company;
     }
 
     public List<Company> getCompanies() {
-        return companiesResposity.findAll();
+        return companyRepository.findAll();
     }
 
     public Company getCompanyById(long id) {
-        return companiesResposity.findById(id);
+        return companyRepository.findById(id);
     }
 
     public List<Company> getCompaniesByPage(int page, int size) {
-        return companiesResposity.findByPage(page, size);
+        return companyRepository.findByPage(page, size);
     }
 
     public Company updateCompany(Company company, long id) throws CompanyNotExsitingException {
-        if (companyResposity.update(company, id)==null) throw new CompanyNotExsitingException();
+        if (companyRepository.update(company, id)==null) throw new CompanyNotExsitingException();
 
-        return companyResposity.update(company, id);
+        return companyRepository.update(company, id);
     }
 
     public void deleteCompany(long id) {
-        companiesResposity.delete(id);
+        companyRepository.delete(id);
     }
 
     public void clearCompanies() {
-            List<Company> companies = companyResposity.findAll();
+            List<Company> companies = companyRepository.findAll();
             companies.clear();
     }
 }
