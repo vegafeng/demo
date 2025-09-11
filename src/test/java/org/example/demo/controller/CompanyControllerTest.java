@@ -1,5 +1,6 @@
 package org.example.demo.controller;
 
+import jakarta.transaction.Transactional;
 import org.example.demo.entity.Company;
 import org.example.demo.exception.ExceptionMsg;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,12 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class CompanyControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -25,9 +31,13 @@ public class CompanyControllerTest {
     private Company company2 = new Company("oocl");
     private Company company3 = new Company("sony");
     private Company company4 = new Company("sam");
+    private long INIT_LENGTH = 0;
+    private List<Company> companies = new ArrayList<>();
     @BeforeEach
     public void setUp() {
-        companyController.clearCompanies();
+//        companyController.clearCompanies();
+        companies = companyController.getCompanies();
+        INIT_LENGTH = companies.size();
     }
 
     @Test
@@ -40,9 +50,9 @@ public class CompanyControllerTest {
         mockMvc.perform(post("/companies").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
-                andExpect(status().isCreated()).
-                andExpect(jsonPath("$.id").value(1))
+                andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("cosco"));
+        assertEquals(companyController.getCompanies().size(), INIT_LENGTH+1);
     }
     @Test
     public void should_return_companies_when_get_all_given_null() throws Exception{
