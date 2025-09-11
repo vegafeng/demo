@@ -203,55 +203,15 @@ public class EmployeeControllerTest {
 
     @Test
     public void should_return_employees_when_get_given_gender() throws Exception {
-        employeeController.addEmployee(employee);
-        employeeController.addEmployee(employee2);
+        createEmployee(requestBody);
+        createEmployee(requestBody2);
         mockMvc.perform(get("/employees?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(employee.getName()))
-                .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
-                .andExpect(jsonPath("$.length()").value(9));
+                .andExpect(jsonPath("$["+INIT_LENGTH+"].name").value("lala"))
+                .andExpect(jsonPath("$["+INIT_LENGTH+"].gender").value("male"));
     }
-//    @Test
-//    @Transactional
-//    public void should_response_no_content_when_delete_given_employee_id() throws Exception {
-////        ResponseEntity<Employee> employeeResponseEntity = employeeController.addEmployee(employee);
-//        String requestBody = """
-//                {
-//                    "name": "5",
-//                    "salary": 1000,
-//                    "gender": "male",
-//                    "age": 20
-//                }
-//                """;
-//
-//        MvcResult result = mockMvc.perform(post("/employees")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.name").value("5"))
-//                .andReturn(); // 获取 MvcResult
-//
-//        // 从 MvcResult 中提取响应体
-//        String jsonResponse = result.getResponse().getContentAsString();
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Employee createdEmployee = objectMapper.readValue(jsonResponse, Employee.class);
-////        mockMvc.perform(post("/employees").
-////                        contentType(MediaType.APPLICATION_JSON).
-////                        content(requestBody)).
-////                andExpect(status().isCreated()).
-////                andExpect(jsonPath("$.name").value("5"))
-////        ;
-//        long id = createdEmployee.getId();
-//        System.out.println(id);
-//        List<Employee> employees1 = employeeController.getEmployee();
-//        for (Employee employee : employees1) {
-//            System.out.println(String.valueOf(employee.getId())+ employee.getStatus());
-//        }
-//        mockMvc.perform(delete("/employees/{id}", id)
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNoContent());
-//    }
+
     @Test
     public void should_response_no_content_when_delete_given_employee_id() throws Exception {
         ResponseEntity<Employee> employeeResponseEntity = employeeController.addEmployee(employee);
