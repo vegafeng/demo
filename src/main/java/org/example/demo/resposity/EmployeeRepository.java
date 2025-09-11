@@ -15,5 +15,6 @@ public interface EmployeeRepository {
     public Employee updateEmployee(Employee employee);
     public List<Employee> findEmployeesByPage(int page, int size);
     public List<Employee> findEmployeesByGender(String gender);
+    public void deleteAll();
 
 }

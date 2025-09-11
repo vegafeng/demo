@@ -54,5 +54,10 @@ public class EmployeeRepositoryDBImpl implements EmployeeRepository {
         return employeeJpaRepository.findAll().stream().filter(employee -> employee.getGender().equals(gender)).toList();
     }
 
+    @Override
+    public void deleteAll() {
+        employeeJpaRepository.deleteAll();
+    }
+
 
 }
