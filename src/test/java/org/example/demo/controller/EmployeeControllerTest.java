@@ -214,8 +214,7 @@ public class EmployeeControllerTest {
 
     @Test
     public void should_response_no_content_when_delete_given_employee_id() throws Exception {
-        ResponseEntity<Employee> employeeResponseEntity = employeeController.addEmployee(employee);
-        long id = employeeResponseEntity.getBody().getId();
+        long id = createEmployee(requestBody);
         mockMvc.perform(delete("/employees/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
