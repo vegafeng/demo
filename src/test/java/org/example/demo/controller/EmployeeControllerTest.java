@@ -42,6 +42,11 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeeController employeeController;
 
+    private String requestBody;
+    private String requestBody2;
+
+
+
 
     Employee employee = new Employee("Tombb", 18, 10000, "male");
     Employee employee2 = new Employee("Tomuu", 18, 10000, "female");
@@ -53,37 +58,10 @@ public class EmployeeControllerTest {
     public void setUp() {
         employees = employeeController.getEmployee();
         INIT_LENGTH = employees.size();
-        System.out.println(INIT_LENGTH);
-
-    }
-
-    @Test
-    public void should_return_id_when_post_given_a_valid_employee() throws Exception {
+//        System.out.println(INIT_LENGTH);
         Company company = new Company("cosco");
         companyRepository.save(company);
-        String requestBody = """
-                {
-                    "name": "5",
-                    "salary": 1000,
-                    "gender": "male",
-                    "age": 20,
-                    "status": true,
-                    "companyId": %d
-                }
-                """.formatted(company.getId());
-        mockMvc.perform(post("/employees").
-                        contentType(MediaType.APPLICATION_JSON).
-                        content(requestBody)).
-                andExpect(status().isCreated()).
-                andExpect(jsonPath("$.name").value("5"))
-        ;
-        assertEquals(employeeController.getEmployee().size(), INIT_LENGTH+1);
-    }
-    @Test
-    public void should_return_id_when_post_given_different_employee() throws Exception {
-        Company company = new Company("cosco");
-        companyRepository.save(company);
-        String requestBody = """
+        requestBody = """
                 {
                     "name": "lala",
                     "salary": 1000,
@@ -93,7 +71,7 @@ public class EmployeeControllerTest {
                     "companyId": %d
                 }
                 """.formatted(company.getId());
-        String requestBody2 = """
+        requestBody2 = """
                 {
                     "name": "kaka",
                     "salary": 200000,
@@ -103,6 +81,21 @@ public class EmployeeControllerTest {
                     "companyId": %d
                 }
                 """.formatted(company.getId());
+
+    }
+
+    @Test
+    public void should_return_id_when_post_given_a_valid_employee() throws Exception {
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isCreated()).
+                andExpect(jsonPath("$.name").value("lala"))
+        ;
+        assertEquals(employeeController.getEmployee().size(), INIT_LENGTH+1);
+    }
+    @Test
+    public void should_return_id_when_post_given_different_employee() throws Exception {
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
