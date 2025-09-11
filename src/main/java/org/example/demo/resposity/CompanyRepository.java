@@ -1,7 +1,6 @@
 package org.example.demo.resposity;
 
 import org.example.demo.entity.Company;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

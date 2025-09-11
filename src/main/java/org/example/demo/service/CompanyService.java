@@ -3,7 +3,6 @@ package org.example.demo.service;
 import org.example.demo.entity.Company;
 import org.example.demo.exception.CompanyNotExsitingException;
 import org.example.demo.resposity.CompanyRepository;
-import org.example.demo.resposity.impl.CompanyRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

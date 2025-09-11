@@ -2,20 +2,15 @@ package org.example.demo.service;
 
 import org.assertj.core.util.Lists;
 import org.example.demo.dto.UpdateEmployeeReq;
-import org.example.demo.entity.Company;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.*;
-import org.example.demo.resposity.CompanyRepository;
 import org.example.demo.resposity.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;

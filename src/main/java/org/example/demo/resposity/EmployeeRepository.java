@@ -1,7 +1,6 @@
 package org.example.demo.resposity;
 
 import org.example.demo.entity.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

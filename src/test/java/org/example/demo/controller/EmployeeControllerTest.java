@@ -7,16 +7,12 @@ import org.example.demo.entity.Employee;
 import org.example.demo.exception.ExceptionMsg;
 import org.example.demo.resposity.CompanyRepository;
 import org.example.demo.resposity.EmployeeRepository;
-import org.example.demo.util.employee.EmployeeUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,11 +22,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -52,6 +45,7 @@ public class EmployeeControllerTest {
     Employee employee = new Employee("Tombb", 18, 10000, "male");
     private List<Employee> employees = new ArrayList<>();
     private long INIT_LENGTH = 0;
+
     @BeforeEach
     public void setUp() {
         employees = employeeController.getEmployee();
@@ -89,8 +83,9 @@ public class EmployeeControllerTest {
                 andExpect(status().isCreated()).
                 andExpect(jsonPath("$.name").value("lala"))
         ;
-        assertEquals(employeeController.getEmployee().size(), INIT_LENGTH+1);
+        assertEquals(employeeController.getEmployee().size(), INIT_LENGTH + 1);
     }
+
     @Test
     public void should_return_id_when_post_given_different_employee() throws Exception {
         mockMvc.perform(post("/employees").
@@ -103,7 +98,7 @@ public class EmployeeControllerTest {
                         content(requestBody2)).
                 andExpect(status().isCreated()).
                 andExpect(jsonPath("$.name").value("kaka"));
-        assertEquals(employeeController.getEmployee().size(), INIT_LENGTH+2);
+        assertEquals(employeeController.getEmployee().size(), INIT_LENGTH + 2);
     }
 
     @Test
@@ -138,6 +133,7 @@ public class EmployeeControllerTest {
                 andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE)));
     }
+
     @Test
     public void should_throw_exception_when_post_given_an_invalid_employee_gt() throws Exception {
         String requestBody = """
@@ -156,6 +152,7 @@ public class EmployeeControllerTest {
                 andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString(ExceptionMsg.AGE_OUT_OF_LEGAL_RANGE)));
     }
+
     @Test
     public void should_throw_exception_when_post_given_an_invalid_age_salary() throws Exception {
         String requestBody = """
@@ -187,8 +184,9 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees").
                         contentType(MediaType.APPLICATION_JSON)).
                 andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(INIT_LENGTH+1));
+                .andExpect(jsonPath("$.length()").value(INIT_LENGTH + 1));
     }
+
     @Test
     public void should_return_employee_when_get_given_id() throws Exception {
         long id = createEmployee(requestBody);
@@ -206,8 +204,8 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$["+INIT_LENGTH+"].name").value("lala"))
-                .andExpect(jsonPath("$["+INIT_LENGTH+"].gender").value("male"));
+                .andExpect(jsonPath("$[" + INIT_LENGTH + "].name").value("lala"))
+                .andExpect(jsonPath("$[" + INIT_LENGTH + "].gender").value("male"));
     }
 
     @Test
@@ -227,7 +225,7 @@ public class EmployeeControllerTest {
         createEmployee(requestBody2);
         long index = INIT_LENGTH + 1;
         mockMvc.perform(get("/employees?page=1&size=5")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[" + index + "].name").value("kaka"))
                 .andExpect(jsonPath("$.[" + index + "].gender").value("female"))
@@ -255,13 +253,14 @@ public class EmployeeControllerTest {
                 }
                 """;
         mockMvc.perform(put("/employees/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.name").value("Tom"))
                 .andExpect(jsonPath("$.gender").value("male"))
                 .andExpect(jsonPath("$.age").value(20));
     }
+
     @Test
     public void should_return_matching_code_when_update_given_status_false() throws Exception {
 
@@ -297,6 +296,7 @@ public class EmployeeControllerTest {
                 .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
 
     }
+
     @Test
     void should_throw_exception_when_get_given_employee_not_existing() throws Exception {
 

@@ -1,7 +1,6 @@
 package org.example.demo.resposity.impl;
 
 import org.example.demo.entity.Company;
-import org.example.demo.entity.Employee;
 import org.example.demo.resposity.CompanyRepository;
 import org.example.demo.resposity.jpa.CompanyJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

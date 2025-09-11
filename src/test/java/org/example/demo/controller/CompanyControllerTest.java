@@ -41,6 +41,7 @@ public class CompanyControllerTest {
     private List<Company> companies = new ArrayList<>();
     private String requestBody;
     private String requestBody2;
+
     @BeforeEach
     public void setUp() {
 
@@ -71,16 +72,17 @@ public class CompanyControllerTest {
                         content(requestBody)).
                 andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("cosco"));
-        assertEquals(companyController.getCompanies().size(), INIT_LENGTH+1);
+        assertEquals(companyController.getCompanies().size(), INIT_LENGTH + 1);
     }
+
     @Test
-    public void should_return_companies_when_get_all_given_null() throws Exception{
+    public void should_return_companies_when_get_all_given_null() throws Exception {
         createCompany(requestBody);
         createCompany(requestBody2);
         mockMvc.perform(get("/companies")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(INIT_LENGTH+2));
+                .andExpect(jsonPath("$.length()").value(INIT_LENGTH + 2));
     }
 
     @Test
@@ -90,6 +92,7 @@ public class CompanyControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("oocl"));
     }
+
     @Test
     public void should_return_companies_when_get_by_page_given_page_size() throws Exception {
         createCompany(requestBody);
@@ -99,6 +102,7 @@ public class CompanyControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(5));
     }
+
     @Test
     public void should_return_matching_code_when_update_by_id_given_age_salary() throws Exception {
         long id = createCompany(requestBody);
@@ -108,6 +112,7 @@ public class CompanyControllerTest {
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.name").value("cosco"));
     }
+
     @Test
     public void should_response_no_content_when_delete_given_employee_id() throws Exception {
         long id = createCompany(requestBody);
@@ -127,6 +132,7 @@ public class CompanyControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(ExceptionMsg.PAGE_NOT_FOUND)));
     }
+
     @Test
     public void should_throw_exception_when_get_given_company_not_exsiting() throws Exception {
         companyController.addCompany(company);
