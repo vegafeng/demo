@@ -180,11 +180,16 @@ public class EmployeeControllerTest {
 
     @Test
     public void should_return_employees_when_get_all_given_null() throws Exception {
-
+        mockMvc.perform(post("/employees").
+                        contentType(MediaType.APPLICATION_JSON).
+                        content(requestBody)).
+                andExpect(status().isCreated()).
+                andExpect(jsonPath("$.name").value("lala"))
+        ;
         mockMvc.perform(get("/employees").
                         contentType(MediaType.APPLICATION_JSON)).
                 andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(INIT_LENGTH));
+                .andExpect(jsonPath("$.length()").value(INIT_LENGTH+1));
     }
     @Test
     public void should_return_employee_when_get_given_id() throws Exception {
