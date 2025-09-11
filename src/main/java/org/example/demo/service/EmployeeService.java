@@ -1,5 +1,6 @@
 package org.example.demo.service;
 
+import org.example.demo.dto.UpdateEmployeeReq;
 import org.example.demo.entity.Employee;
 import org.example.demo.exception.*;
 import org.example.demo.resposity.EmployeeRepository;
@@ -65,13 +66,18 @@ public class EmployeeService {
                 .limit(size)
                 .collect(Collectors.toList());
     }
-    public Employee updateEmployee(Employee employee, long id) {
+    public Employee updateEmployee(UpdateEmployeeReq employee, long id) {
 
         if (!employeeRepository.findEmployeeById(id).getStatus()) throw new EmployeeNotExsitingException();
-        employee.setName(employee.getName());
-        employee.setAge(employee.getAge());
-        employee.setGender(employee.getGender());
-        return employeeRepository.saveEmployee(employee);
+        Employee employeeExisting = employeeRepository.findEmployeeById(id);
+        employeeExisting.setName(employee.getName());
+        employeeExisting.setGender(employee.getGender());
+        employeeExisting.setAge(employee.getAge());
+//        employee.setName(employee.getName());
+//        employee.setAge(employee.getAge());
+//        employee.setGender(employee.getGender());
+        employeeRepository.saveEmployee(employeeExisting);
+        return employeeExisting;
 
     }
 
