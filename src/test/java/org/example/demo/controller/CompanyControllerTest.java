@@ -101,18 +101,17 @@ public class CompanyControllerTest {
     }
     @Test
     public void should_return_matching_code_when_update_by_id_given_age_salary() throws Exception {
-        companyController.addCompany(company);
-        mockMvc.perform(put("/companies/{id}", 1)
+        long id = createCompany(requestBody);
+        mockMvc.perform(put("/companies/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+                        .content(requestBody2))
                 .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("oocl"));
+                .andExpect(jsonPath("$.name").value("cosco"));
     }
     @Test
     public void should_response_no_content_when_delete_given_employee_id() throws Exception {
-        companyController.addCompany(company);
-        mockMvc.perform(delete("/companies/{id}", 1)
+        long id = createCompany(requestBody);
+        mockMvc.perform(delete("/companies/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
