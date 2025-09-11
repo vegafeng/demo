@@ -193,12 +193,12 @@ public class EmployeeControllerTest {
     }
     @Test
     public void should_return_employee_when_get_given_id() throws Exception {
-        employeeController.addEmployee(employee);
-        mockMvc.perform(get("/employees/{id}", 2).contentType(MediaType.APPLICATION_JSON))
+        long id = createEmployee(requestBody);
+        mockMvc.perform(get("/employees/{id}", id).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Tom"))
+                .andExpect(jsonPath("$.name").value("lala"))
                 .andExpect(jsonPath("$.gender").value("male"))
-                .andExpect(jsonPath("$.salary").value(1000));
+                .andExpect(jsonPath("$.age").value(20));
     }
 
     @Test
@@ -367,11 +367,8 @@ private EmployeeRepository employeeRepository;
         ResultActions resultActions = mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody));
-
         MvcResult mvcResult = resultActions.andReturn();
-
         String contentAsString = mvcResult.getResponse().getContentAsString();
-
         return new ObjectMapper().readTree(contentAsString).get("id").asLong();
     }
 }
