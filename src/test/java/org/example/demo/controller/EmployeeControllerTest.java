@@ -58,7 +58,6 @@ public class EmployeeControllerTest {
     public void setUp() {
         employees = employeeController.getEmployee();
         INIT_LENGTH = employees.size();
-//        System.out.println(INIT_LENGTH);
         Company company = new Company("cosco");
         companyRepository.save(company);
         requestBody = """
@@ -111,30 +110,14 @@ public class EmployeeControllerTest {
 
     @Test
     public void should_throw_exception_when_post_given_same_employee() throws Exception {
-        String requestBody = """
-                {
-                    "name": "cocokk",
-                    "salary": 1000,
-                    "gender": "male",
-                    "age": 20
-                }
-                """;
-        String requestBody2 = """
-                {
-                    "name": "cocoll",
-                    "salary": 2000,
-                    "gender": "male",
-                    "age": 30
-                }
-                """;
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
                         content(requestBody)).
                 andExpect(status().isCreated()).
-                andExpect(jsonPath("$.name").value("cocokk"));
+                andExpect(jsonPath("$.name").value("lala"));
         mockMvc.perform(post("/employees").
                         contentType(MediaType.APPLICATION_JSON).
-                        content(requestBody2)).
+                        content(requestBody)).
                 andExpect(status().isBadRequest());
     }
 
