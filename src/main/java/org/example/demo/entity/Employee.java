@@ -28,7 +28,7 @@ public class Employee {
     private String gender;
     private boolean status;
     @Column(name = "company_id")
-    private long companyId;
+    private Long companyId;
 
     public Employee(String name, int age, int salary, String gender) {
         this.name = name;
