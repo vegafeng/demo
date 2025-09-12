@@ -31,10 +31,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'mysql:mysql-connector-java:8.0.30'
+//    runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
-	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'com.h2database:h2'
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa') {
+        exclude group: 'com.h2database', module: 'h2' // 排除不需要的数据库依赖
+    }
+    runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
 }
 
 tasks.named('test') {
