@@ -97,10 +97,10 @@ public class CompanyControllerTest {
     public void should_return_companies_when_get_by_page_given_page_size() throws Exception {
         createCompany(requestBody);
         createCompany(requestBody2);
-        mockMvc.perform(get("/companies?page=1&size=5")
+        mockMvc.perform(get("/companies?page=0&size=5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(5));
+                .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
